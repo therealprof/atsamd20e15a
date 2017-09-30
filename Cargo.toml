@@ -1,0 +1,37 @@
+[package]
+authors = ["Daniel Egger <daniel@eggers-club.de>"]
+categories = [
+    "embedded",
+    "no-std",
+]
+keywords = [
+    "arm",
+    "cortex-m",
+    "template",
+]
+name = "atsamd20e15a"
+version = "0.4.2"
+
+[dependencies]
+bare-metal = "0.1.1"
+cortex-m = "0.3.1"
+numtoa = "0.0.7"
+static-ref = "0.2.1"
+vcell = "0.1.0"
+volatile-register = "0.2.0"
+
+[dependencies.cortex-m-rt]
+features = ["abort-on-panic"]
+version = "0.3.5"
+
+[features]
+default = ["rt"]
+rt = []
+[profile.dev]
+debug = true
+lto = true
+
+[profile.release]
+debug = true
+lto = true
+opt-level = "s"

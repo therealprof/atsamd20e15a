@@ -10,7 +10,9 @@ extern crate cortex_m_rt;
 extern crate bare_metal;
 extern crate vcell;
 
+mod common;
 mod svd;
 
-pub use svd::*;
+pub use common::*;
 pub use cortex_m_rt::*;
+pub use svd::*;

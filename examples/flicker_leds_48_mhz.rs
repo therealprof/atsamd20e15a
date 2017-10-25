@@ -20,7 +20,9 @@ fn main() {
         let syst = SYST.borrow(cs);
 
         /* Initialise PA0-P04 */
-        port.outset.modify(|_, w| unsafe { w.outset().bits(0x1FF_FFFF) });
+        port.outset.modify(
+            |_, w| unsafe { w.outset().bits(0x1FF_FFFF) },
+        );
         port.dir.modify(|_, w| unsafe { w.dir().bits(0x1FF_FFFF) });
 
         /* Initialise SysTick counter with a defined value */
@@ -45,7 +47,6 @@ fn main() {
 /* Define an exception, i.e. function to call when exception occurs. Here our SysTick timer
  * trips the flicker function */
 exception!(SYS_TICK, flicker, locals: {
-    state: bool = false;
     rand: u32 = 2;
 });
 
@@ -55,28 +56,19 @@ fn flicker(l: &mut SYS_TICK::Locals) {
     cortex_m::interrupt::free(|cs| {
         let port = PORT.borrow(cs);
 
-        /* If next state is true */
-        if l.state {
-            /* Enable LEDs */
-            port.outclr.modify(
-                |_, w| unsafe { w.outclr().bits(l.rand) },
-            );
+        /* Enable LEDs */
+        port.outclr.modify(
+            |_, w| unsafe { w.outclr().bits(l.rand) },
+        );
 
-            /* And set next state to false */
-            l.state = false;
-        } else {
-            /* Disable LEDs */
-            port.outset.modify(
-                |_, w| unsafe { w.outset().bits(l.rand) },
-            );
+        /* Disable LEDs */
+        port.outset.modify(
+            |_, w| unsafe { w.outset().bits(!l.rand) },
+        );
 
-            /* And set next state to false */
-            l.state = true;
-
-            /* Use PRBS31 to generate next LED sequence */
-            let a = l.rand;
-            let newbit = ((a >> 31) ^ (a >> 28)) & 1;
-            l.rand = (a << 1) | newbit;
-        }
+        /* Use PRBS31 to generate next LED sequence */
+        let a = l.rand;
+        let newbit = ((a >> 31) ^ (a >> 28)) & 1;
+        l.rand = (a << 1) | newbit;
     });
 }

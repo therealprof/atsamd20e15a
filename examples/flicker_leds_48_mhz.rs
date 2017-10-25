@@ -20,8 +20,8 @@ fn main() {
         let syst = SYST.borrow(cs);
 
         /* Initialise PA0-P04 */
-        port.outset.modify(|_, w| unsafe { w.outset().bits(31) });
-        port.dir.modify(|_, w| unsafe { w.dir().bits(31) });
+        port.outset.modify(|_, w| unsafe { w.outset().bits(0x1FF_FFFF) });
+        port.dir.modify(|_, w| unsafe { w.dir().bits(0x1FF_FFFF) });
 
         /* Initialise SysTick counter with a defined value */
         unsafe { syst.cvr.write(1) };
@@ -29,8 +29,8 @@ fn main() {
         /* Set source for SysTick counter, here full operating frequency (== 8MHz) */
         syst.set_clock_source(SystClkSource::Core);
 
-        /* Set reload value, i.e. timer delay (== 250ms) */
-        syst.set_reload(12_000_000);
+        /* Set reload value, i.e. timer delay (== 100ms) */
+        syst.set_reload(4_800_000);
 
         /* Start counter */
         syst.enable_counter();

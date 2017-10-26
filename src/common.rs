@@ -1,4 +1,4 @@
-use super::{SYSCTRL, GCLK, NVMCTRL};
+use super::{SYSCTRL, GCLK, NVMCTRL, PM, TC0, NVIC, Interrupt};
 use cortex_m::interrupt;
 
 pub fn init_48_mhz_clock() {
@@ -108,5 +108,48 @@ pub fn init_48_mhz_clock() {
 
         /* Wait, again... */
         while gclk.status.read().syncbusy().bit_is_set() {}
+    });
+}
+
+
+pub fn setup_tc0() {
+    interrupt::free(|cs| {
+        let gclk = GCLK.borrow(cs);
+        let pm = PM.borrow(cs);
+        let tc0 = TC0.borrow(cs);
+        let nvic = NVIC.borrow(cs);
+
+        /* Setup CPU clock for TC0 and TC1 */
+        gclk.clkctrl.write(|w| {
+            w.clken().set_bit().gen().gclk0().id().tc0_tc1()
+        });
+
+        /* And wait */
+        while gclk.status.read().syncbusy().bit_is_set() {}
+
+        /* Enable EXTI IRQs, set prio 1 and clear any pending IRQs */
+        nvic.enable(Interrupt::TC0);
+        unsafe { nvic.set_priority(Interrupt::TC0, 1) };
+        nvic.clear_pending(Interrupt::TC0);
+
+        /* Enable clock for TC0 */
+        pm.apbcmask.modify(|_, w| w.tc0().set_bit());
+
+        tc0.ctrla.modify(|_, w| {
+            w.mode().count16().prescaler().div8().wavegen().mfrq()
+        });
+        while tc0.status.read().syncbusy().bit_is_set() {}
+        tc0.ctrlbset.write(
+            |w| w.oneshot().clear_bit().cmd().retrigger(),
+        );
+        while tc0.status.read().syncbusy().bit_is_set() {}
+
+        tc0.cc[0].write(|w| unsafe { w.cc().bits(375) });
+        while tc0.status.read().syncbusy().bit_is_set() {}
+        tc0.intenset.write(|w| w.ovf().set_bit());
+        while tc0.status.read().syncbusy().bit_is_set() {}
+
+        tc0.ctrla.modify(|_, w| w.enable().set_bit());
+        while tc0.status.read().syncbusy().bit_is_set() {}
     });
 }

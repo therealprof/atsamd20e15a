@@ -1,9 +1,21 @@
 use core::ops::{Index, IndexMut};
+use core::slice;
 
 
 pub struct LEDs {
     pwm_state: [u8; 19],
 }
+
+
+impl<'a> IntoIterator for &'a LEDs {
+    type Item = &'a u8;
+    type IntoIter = slice::Iter<'a, u8>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.pwm_state.iter()
+    }
+}
+
 
 impl Index<usize> for LEDs {
     type Output = u8;
@@ -76,8 +88,8 @@ impl LEDs {
     pub fn get_over_bitmask(&self, value: u8) -> u32 {
         let mut mask = 0;
 
-        for i in 0..19 {
-            if value < self.pwm_state[i] {
+        for (i, item) in self.into_iter().enumerate() {
+            if value < *item {
                 mask |= self.led_to_pinbit(i);
             }
         }

@@ -76,10 +76,10 @@ fn sparkle(l: &mut SYS_TICK::Locals) {
             let a = l.rand;
             let newbit = ((a >> 19) ^ (a >> 2)) & 1;
             l.rand = ((a << 1) | newbit) & 1_048_575;
-            for i in 0..19 {
-                if (l.rand & (1 << i)) != 0 {
-                    unsafe {
-                        let mut value: u16 = u16::from(LEDS[i]) + 48;
+            unsafe {
+                for (i, item) in LEDS.into_iter().enumerate() {
+                    if (l.rand & (1 << i)) != 0 {
+                        let mut value: u16 = u16::from(*item) + 48;
                         LEDS[i] = if value > 255 { 255 } else { value as u8 };
                     }
                 }

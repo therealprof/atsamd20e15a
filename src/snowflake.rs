@@ -85,6 +85,26 @@ impl LEDs {
         }
     }
 
+    pub fn rshift(&mut self, amount: usize) {
+        for _ in 0..amount {
+            let temp = self[18];
+            for i in 0..18 {
+                self[18-i] = self[17-i];
+            }
+            self[0] = temp;
+        }
+    }
+
+    pub fn lshift(&mut self, amount: usize) {
+        for _ in 0..amount {
+            let temp = self[0];
+            for i in 0..18 {
+                self[i] = self[i+1];
+            }
+            self[18] = temp;
+        }
+    }
+
     pub fn get_over_bitmask(&self, value: u8) -> u32 {
         let mut mask = 0;
 

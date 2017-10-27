@@ -9,12 +9,14 @@ use atsamd20e15a::{PORT, SYST, init_48_mhz_clock, setup_tc0};
 use cortex_m::interrupt;
 use cortex_m::peripheral::SystClkSource;
 
+use atsamd20e15a::snowflake;
 
-static mut PWM_STATE: [u8; 19] = [0; 19];
+
+static mut LEDS: snowflake::LEDs = snowflake::LEDs::new();
 
 
 fn main() {
-    for _ in 0..1_000_000 {
+    for _ in 0..500_000 {
         cortex_m::asm::nop();
     }
 
@@ -65,24 +67,20 @@ fn sparkle(l: &mut SYS_TICK::Locals) {
     cortex_m::interrupt::free(|_cs| {
         l.time -= 1;
 
-        for i in 0..19 {
-            unsafe {
-                if PWM_STATE[i] != 0 {
-                    PWM_STATE[i] -= 1;
-                }
-            }
+        unsafe {
+            LEDS.sub(1);
         }
 
-        if l.time % 32 == 0{
+        if l.time % 32 == 0 {
             /* Use PRBS20 to generate next LED sequence */
             let a = l.rand;
             let newbit = ((a >> 19) ^ (a >> 2)) & 1;
-            l.rand = ((a << 1) | newbit) & 1048575;
+            l.rand = ((a << 1) | newbit) & 1_048_575;
             for i in 0..19 {
                 if (l.rand & (1 << i)) != 0 {
                     unsafe {
-                        let mut value: u16 = u16::from(PWM_STATE[i]) + 48;
-                        PWM_STATE[i] = if value > 255 { 255 } else { value as u8 };
+                        let mut value: u16 = u16::from(LEDS[i]) + 48;
+                        LEDS[i] = if value > 255 { 255 } else { value as u8 };
                     }
                 }
             }
@@ -96,32 +94,6 @@ interrupt!(TC0, fade, locals: {
 });
 
 
-fn led_to_pinbit(l: usize) -> u32 {
-    match l {
-        0 => 1 << 0,
-        1 => 1 << 1,
-        2 => 1 << 2,
-        3 => 1 << 3,
-        4 => 1 << 4,
-        5 => 1 << 5,
-        6 => 1 << 6,
-        7 => 1 << 7,
-        8 => 1 << 8,
-        9 => 1 << 9,
-        10 => 1 << 10,
-        11 => 1 << 11,
-        12 => 1 << 24,
-        13 => 1 << 23,
-        14 => 1 << 22,
-        15 => 1 << 19,
-        16 => 1 << 18,
-        17 => 1 << 17,
-        18 => 1 << 16,
-        _ => 1 << 14,
-    }
-}
-
-
 fn fade(l: &mut TC0::Locals) {
     /* Enter critical section */
     cortex_m::interrupt::free(|cs| {
@@ -130,13 +102,7 @@ fn fade(l: &mut TC0::Locals) {
         tc0.intflag.write(|w| w.ovf().set_bit().err().set_bit());
 
         l.time -= 1;
-        let mut newstate: u32 = 0;
-
-        for i in 0..19 {
-            if l.time < unsafe { PWM_STATE[i] } {
-                newstate |= led_to_pinbit(i);
-            }
-        }
+        let newstate = unsafe { LEDS.get_over_bitmask(l.time) };
 
         /* Enable LEDs */
         port.outclr.modify(

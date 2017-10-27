@@ -11,6 +11,7 @@ extern crate bare_metal;
 extern crate vcell;
 
 mod common;
+pub mod snowflake;
 mod svd;
 
 pub use common::*;

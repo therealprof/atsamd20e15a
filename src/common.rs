@@ -112,7 +112,7 @@ pub fn init_48_mhz_clock() {
 }
 
 
-pub fn setup_tc0() {
+pub fn setup_tc0(divider: u16) {
     interrupt::free(|cs| {
         let gclk = GCLK.borrow(cs);
         let pm = PM.borrow(cs);
@@ -138,18 +138,34 @@ pub fn setup_tc0() {
         tc0.ctrla.modify(|_, w| {
             w.mode().count16().prescaler().div8().wavegen().mfrq()
         });
+
+        /* And wait */
         while tc0.status.read().syncbusy().bit_is_set() {}
+
+        /* Make timer autorestart */
         tc0.ctrlbset.write(
             |w| w.oneshot().clear_bit().cmd().retrigger(),
         );
+
+        /* And wait */
         while tc0.status.read().syncbusy().bit_is_set() {}
 
-        tc0.cc[0].write(|w| unsafe { w.cc().bits(375) });
+        /* Setup divider */
+        tc0.cc[0].write(|w| unsafe { w.cc().bits(divider) });
+
+        /* And wait */
         while tc0.status.read().syncbusy().bit_is_set() {}
+
+        /* Set interrupt to trigger on overflow */
         tc0.intenset.write(|w| w.ovf().set_bit());
+
+        /* And wait */
         while tc0.status.read().syncbusy().bit_is_set() {}
 
+        /* Enable  */
         tc0.ctrla.modify(|_, w| w.enable().set_bit());
+
+        /* And wait */
         while tc0.status.read().syncbusy().bit_is_set() {}
     });
 }

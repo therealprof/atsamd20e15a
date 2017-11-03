@@ -50,7 +50,8 @@ fn main() {
         syst.enable_interrupt();
     });
 
-    setup_tc0();
+    /* Set timer to fire every 480kHz */
+    setup_tc0(100);
 }
 
 

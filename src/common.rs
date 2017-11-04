@@ -1,4 +1,4 @@
-use super::{SYSCTRL, GCLK, NVMCTRL, PM, TC0, NVIC, Interrupt};
+use super::{SYSCTRL, GCLK, NVMCTRL, PM, TC0, NVIC, EIC, Interrupt};
 use cortex_m::interrupt;
 
 pub fn init_48_mhz_clock() {
@@ -167,5 +167,63 @@ pub fn setup_tc0(divider: u16) {
 
         /* And wait */
         while tc0.status.read().syncbusy().bit_is_set() {}
+    });
+}
+
+
+/* Setup EIC and PA25 to register external interrupts */
+pub fn setup_eic() {
+    interrupt::free(|cs| {
+        let eic = EIC.borrow(cs);
+        let pm = PM.borrow(cs);
+        let gclk = GCLK.borrow(cs);
+        let nvic = NVIC.borrow(cs);
+
+        /* Enable clock for EIC */
+        pm.apbamask.modify(|_, w| w.eic().set_bit());
+
+        /* Set up clock generator 0 as input for EIC */
+        gclk.clkctrl.write(
+            |w| w.clken().set_bit().gen().gclk0().id().eic(),
+        );
+
+        /* How about we wait? */
+        while gclk.status.read().syncbusy().bit_is_set() {}
+
+        /* Reset the EIC */
+        eic.ctrl.modify(|_, w| w.swrst().set_bit());
+
+        /* More waiting... */
+        while eic.ctrl.read().swrst().bit_is_set() {}
+        while eic.status.read().syncbusy().bit_is_set() {}
+
+        /* Configure PA25/EXTINT13 to register rising edges */
+        eic.config[1].modify(|_, w| w.sense5().rise().filten5().set_bit());
+
+        /* More waiting... */
+        while eic.status.read().syncbusy().bit_is_set() {}
+
+        /* Far more waiting... */
+        while eic.status.read().syncbusy().bit_is_set() {}
+
+        /* Clear EXTINT13 interrupt*/
+        eic.intflag.write(|w| w.extint13().set_bit());
+
+        /* Enable EXTINT13 */
+        eic.intenset.write(|w| w.extint13().set_bit());
+
+        /* Even nore waiting... */
+        while eic.status.read().syncbusy().bit_is_set() {}
+
+        /* Enable EIC */
+        eic.ctrl.modify(|_, w| w.enable().set_bit());
+
+        /* And yet more waiting... */
+        while eic.status.read().syncbusy().bit_is_set() {}
+
+        /* Enable EXTI IRQs, set prio 2 and clear any pending IRQs */
+        nvic.enable(Interrupt::EIC);
+        unsafe { nvic.set_priority(Interrupt::EIC, 2) };
+        nvic.clear_pending(Interrupt::EIC);
     });
 }

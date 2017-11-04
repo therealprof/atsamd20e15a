@@ -76,6 +76,13 @@ impl LEDs {
         }
     }
 
+    /* Overflowing addition of constant to all LED PWM values */
+    pub fn add(&mut self, other: u8) {
+        for i in &mut self.pwm_state {
+            *i = *i + other
+        }
+    }
+
     /* Saturated substraction of constant from all LED PWM values */
     pub fn subs(&mut self, other: u8) {
         for i in &mut self.pwm_state {
@@ -87,7 +94,15 @@ impl LEDs {
         }
     }
 
-    pub fn rshift(&mut self, amount: usize) {
+    /* Underflowing substraction of constant from all LED PWM values */
+    pub fn sub(&mut self, other: u8) {
+        for i in &mut self.pwm_state {
+            *i = *i - other
+        }
+    }
+
+    /* Shift clockwise, i.e. left */
+    pub fn lshift(&mut self, amount: usize) {
         for _ in 0..amount {
             let temp = self[18];
             for i in 0..18 {
@@ -97,7 +112,8 @@ impl LEDs {
         }
     }
 
-    pub fn lshift(&mut self, amount: usize) {
+    /* Shift counter-clockwise, i.e. right */
+    pub fn rshift(&mut self, amount: usize) {
         for _ in 0..amount {
             let temp = self[0];
             for i in 0..18 {

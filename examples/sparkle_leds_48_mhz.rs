@@ -69,7 +69,7 @@ fn sparkle(l: &mut SYS_TICK::Locals) {
         l.time -= 1;
 
         unsafe {
-            LEDS.sub(1);
+            LEDS.subs(1);
         }
 
         if l.time % 32 == 0 {

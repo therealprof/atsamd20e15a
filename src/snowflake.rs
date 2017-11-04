@@ -65,7 +65,8 @@ impl LEDs {
         }
     }
 
-    pub fn add(&mut self, other: u8) {
+    /* Saturated addition of constant to all LED PWM values */
+    pub fn adds(&mut self, other: u8) {
         for i in &mut self.pwm_state {
             *i = if u16::from(*i) + u16::from(other) > 255 {
                 255
@@ -75,7 +76,8 @@ impl LEDs {
         }
     }
 
-    pub fn sub(&mut self, other: u8) {
+    /* Saturated substraction of constant from all LED PWM values */
+    pub fn subs(&mut self, other: u8) {
         for i in &mut self.pwm_state {
             *i = if i16::from(*i) - i16::from(other) < 0 {
                 0

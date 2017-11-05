@@ -34,10 +34,8 @@ impl IndexMut<usize> for LEDs {
 
 
 impl LEDs {
-    pub const fn new () -> LEDs {
-        LEDs {
-            pwm_state: [0; 19],
-        }
+    pub const fn new() -> LEDs {
+        LEDs { pwm_state: [0; 19] }
     }
 
     fn led_to_pinbit(&self, l: usize) -> u32 {
@@ -106,7 +104,7 @@ impl LEDs {
         for _ in 0..amount {
             let temp = self[18];
             for i in 0..18 {
-                self[18-i] = self[17-i];
+                self[18 - i] = self[17 - i];
             }
             self[0] = temp;
         }
@@ -117,21 +115,16 @@ impl LEDs {
         for _ in 0..amount {
             let temp = self[0];
             for i in 0..18 {
-                self[i] = self[i+1];
+                self[i] = self[i + 1];
             }
             self[18] = temp;
         }
     }
 
     pub fn get_over_bitmask(&self, value: u8) -> u32 {
-        let mut mask = 0;
-
-        for (i, item) in self.into_iter().enumerate() {
-            if value < *item {
-                mask |= self.led_to_pinbit(i);
-            }
-        }
-
-        mask
+        self.into_iter()
+            .enumerate()
+            .map(|(i, v)| if value < *v { self.led_to_pinbit(i) } else { 0 })
+            .sum()
     }
 }

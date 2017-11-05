@@ -79,7 +79,7 @@ fn running() {
     unsafe {
         LEDS.subs(1);
 
-        /* Rotate LED values in one direction for a few rounds, then the other */
+        /* Rotate LED values, skipping a few positions */
         LEDS.lshift(4);
     }
 }

@@ -61,7 +61,7 @@ fn main() {
     });
 
     /* Setup timer interrupt with 480kHz frequency */
-    setup_tc0(100);
+    setup_tc0(2599);
 
     /* Initialise an LED to full brightness to get started */
     unsafe {
@@ -80,7 +80,7 @@ fn running() {
         LEDS.subs(1);
 
         /* Rotate LED values in one direction for a few rounds, then the other */
-        LEDS.lshift(1);
+        LEDS.lshift(4);
     }
 }
 

@@ -7,6 +7,12 @@ pub struct LEDs {
 }
 
 
+pub fn leds() -> &'static mut LEDs {
+    static mut SINGLETON: LEDs = LEDs::new();
+    unsafe { &mut SINGLETON }
+}
+
+
 impl<'a> IntoIterator for &'a LEDs {
     type Item = &'a u8;
     type IntoIter = slice::Iter<'a, u8>;

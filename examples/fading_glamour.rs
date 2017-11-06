@@ -61,7 +61,7 @@ fn main() {
     setup_tc0(2599);
 
     /* Initialise an LED to full brightness to get started */
-    snowflake::leds()[0] = 255;
+    snowflake::leds()[0].set(255);
 }
 
 
@@ -87,7 +87,7 @@ fn glow() {
     cortex_m::interrupt::free(|cs| {
         let eic = atsamd20e15a::EIC.borrow(cs);
         eic.intflag.modify(|_, w| w.extint13().set_bit());
-        snowflake::leds()[0] = 255;
+        snowflake::leds()[0].set(255);
     });
 }
 

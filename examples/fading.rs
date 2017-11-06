@@ -59,20 +59,20 @@ fn main() {
 
     /* Initialise an LED gradient */
     let leds = snowflake::leds();
-    leds[0] = 255;
-    leds[1] = 230;
-    leds[2] = 210;
-    leds[3] = 190;
-    leds[4] = 170;
-    leds[5] = 150;
-    leds[6] = 130;
-    leds[7] = 110;
-    leds[8] = 90;
-    leds[9] = 70;
-    leds[10] = 50;
-    leds[11] = 30;
-    leds[12] = 10;
-    leds[13] = 1;
+    leds[0].set(255);
+    leds[1].set(230);
+    leds[2].set(210);
+    leds[3].set(190);
+    leds[4].set(170);
+    leds[5].set(150);
+    leds[6].set(130);
+    leds[7].set(110);
+    leds[8].set(90);
+    leds[9].set(70);
+    leds[10].set(50);
+    leds[11].set(30);
+    leds[12].set(10);
+    leds[13].set(1);
 }
 
 

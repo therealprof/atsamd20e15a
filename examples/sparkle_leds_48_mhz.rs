@@ -74,8 +74,8 @@ fn sparkle(l: &mut SYS_TICK::Locals) {
             l.rand = ((a << 1) | newbit) & 1_048_575;
             for (i, item) in snowflake::leds().into_iter().enumerate() {
                 if (l.rand & (1 << i)) != 0 {
-                    let mut value: u16 = u16::from(*item) + 48;
-                    snowflake::leds()[i] = if value > 255 { 255 } else { value as u8 };
+                    let mut value: u16 = u16::from(item.get()) + 48;
+                    snowflake::leds()[i].set(if value > 255 { 255 } else { value as u8 });
                 }
             }
         }

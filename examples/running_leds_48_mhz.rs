@@ -12,11 +12,8 @@ use cortex_m::peripheral::SystClkSource;
 use atsamd20e15a::snowflake;
 
 
-static mut LEDS: snowflake::LEDs = snowflake::LEDs::new();
-
-
 fn main() {
-    for _ in 0..500_000 {
+    for _ in 0..200_000 {
         cortex_m::asm::nop();
     }
 
@@ -54,12 +51,11 @@ fn main() {
     setup_tc0(100);
 
     /* Initialise a few LEDs with a gradient */
-    unsafe {
-        LEDS[0] = 255;
-        LEDS[1] = 127;
-        LEDS[2] = 15;
-        LEDS[3] = 7;
-    }
+    let leds = snowflake::leds();
+    leds[0] = 255;
+    leds[1] = 127;
+    leds[2] = 15;
+    leds[3] = 7;
 }
 
 
@@ -74,12 +70,10 @@ fn running(l: &mut SYS_TICK::Locals) {
     l.time -= 1;
 
     /* Rotate LED values in one direction for a few rounds, then the other */
-    unsafe {
-        if l.time < 127 {
-            LEDS.rshift(1);
-        } else {
-            LEDS.lshift(1);
-        }
+    if l.time < 127 {
+        snowflake::leds().rshift(1);
+    } else {
+        snowflake::leds().lshift(1);
     }
 }
 
@@ -98,7 +92,7 @@ fn fade(l: &mut TC0::Locals) {
         tc0.intflag.write(|w| w.ovf().set_bit().err().set_bit());
 
         l.time -= 1;
-        let newstate = unsafe { LEDS.get_over_bitmask(l.time) };
+        let newstate = snowflake::leds().get_over_bitmask(l.time);
 
         /* Enable LEDs */
         port.outclr.modify(

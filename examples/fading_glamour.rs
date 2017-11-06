@@ -12,9 +12,6 @@ use cortex_m::peripheral::SystClkSource;
 use atsamd20e15a::snowflake;
 
 
-static mut LEDS: snowflake::LEDs = snowflake::LEDs::new();
-
-
 fn main() {
     for _ in 0..200_000 {
         cortex_m::asm::nop();
@@ -64,9 +61,7 @@ fn main() {
     setup_tc0(2599);
 
     /* Initialise an LED to full brightness to get started */
-    unsafe {
-        LEDS[0] = 255;
-    }
+    snowflake::leds()[0] = 255;
 }
 
 
@@ -76,12 +71,10 @@ exception!(SYS_TICK, running);
 
 /* Circle LEDs and let them fade out */
 fn running() {
-    unsafe {
-        LEDS.subs(1);
+    snowflake::leds().subs(1);
 
-        /* Rotate LED values, skipping a few positions */
-        LEDS.lshift(4);
-    }
+    /* Rotate LED values, skipping a few positions */
+    snowflake::leds().lshift(4);
 }
 
 
@@ -94,9 +87,7 @@ fn glow() {
     cortex_m::interrupt::free(|cs| {
         let eic = atsamd20e15a::EIC.borrow(cs);
         eic.intflag.modify(|_, w| w.extint13().set_bit());
-        unsafe {
-            LEDS[0] = 255;
-        }
+        snowflake::leds()[0] = 255;
     });
 }
 
@@ -107,6 +98,7 @@ interrupt!(TC0, fade, locals: {
     time: u8 = 0;
 });
 
+
 /* Apply the current LED intensity of all LEDs */
 fn fade(l: &mut TC0::Locals) {
     /* Enter critical section */
@@ -116,7 +108,7 @@ fn fade(l: &mut TC0::Locals) {
         tc0.intflag.write(|w| w.ovf().set_bit().err().set_bit());
 
         l.time -= 1;
-        let newstate = unsafe { LEDS.get_over_bitmask(l.time) };
+        let newstate = snowflake::leds().get_over_bitmask(l.time);
 
         /* Enable LEDs */
         port.outclr.modify(

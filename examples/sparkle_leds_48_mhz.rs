@@ -12,11 +12,8 @@ use cortex_m::peripheral::SystClkSource;
 use atsamd20e15a::snowflake;
 
 
-static mut LEDS: snowflake::LEDs = snowflake::LEDs::new();
-
-
 fn main() {
-    for _ in 0..500_000 {
+    for _ in 0..200_000 {
         cortex_m::asm::nop();
     }
 
@@ -68,21 +65,17 @@ fn sparkle(l: &mut SYS_TICK::Locals) {
     cortex_m::interrupt::free(|_cs| {
         l.time -= 1;
 
-        unsafe {
-            LEDS.subs(1);
-        }
+        snowflake::leds().subs(1);
 
         if l.time % 32 == 0 {
             /* Use PRBS20 to generate next LED sequence */
             let a = l.rand;
             let newbit = ((a >> 19) ^ (a >> 2)) & 1;
             l.rand = ((a << 1) | newbit) & 1_048_575;
-            unsafe {
-                for (i, item) in LEDS.into_iter().enumerate() {
-                    if (l.rand & (1 << i)) != 0 {
-                        let mut value: u16 = u16::from(*item) + 48;
-                        LEDS[i] = if value > 255 { 255 } else { value as u8 };
-                    }
+            for (i, item) in snowflake::leds().into_iter().enumerate() {
+                if (l.rand & (1 << i)) != 0 {
+                    let mut value: u16 = u16::from(*item) + 48;
+                    snowflake::leds()[i] = if value > 255 { 255 } else { value as u8 };
                 }
             }
         }
@@ -103,7 +96,7 @@ fn fade(l: &mut TC0::Locals) {
         tc0.intflag.write(|w| w.ovf().set_bit().err().set_bit());
 
         l.time -= 1;
-        let newstate = unsafe { LEDS.get_over_bitmask(l.time) };
+        let newstate = snowflake::leds().get_over_bitmask(l.time);
 
         /* Enable LEDs */
         port.outclr.modify(

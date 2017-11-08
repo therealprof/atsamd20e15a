@@ -44,8 +44,8 @@ fn main() {
         /* Set source for SysTick counter, here full operating frequency (== 8MHz) */
         syst.set_clock_source(SystClkSource::Core);
 
-        /* Set reload value, i.e. timer delay (== 1/12s) */
-        syst.set_reload(4_000_000);
+        /* Set reload value, i.e. timer delay (== 1/24s) */
+        syst.set_reload(2_000_000);
 
         /* Start counter */
         syst.enable_counter();
@@ -54,8 +54,8 @@ fn main() {
         syst.enable_interrupt();
     });
 
-    /* Setup timer interrupt with 480kHz frequency */
-    setup_tc0(100);
+    /* Setup timer interrupt with 240kHz frequency */
+    setup_tc0(200);
 
     /* Initialise an LED gradient */
     let leds = snowflake::leds();
@@ -82,8 +82,13 @@ exception!(SYS_TICK, running);
 
 
 fn running() {
+    let leds = &mut snowflake::leds();
+
     /* Rotate LED values */
-    snowflake::leds().rshift(1);
+    leds.rshift(1);
+
+    /* Recalculate PWM values */
+    snowflake::pwmcache().calculate(leds);
 }
 
 
@@ -105,7 +110,8 @@ fn fade(time: u8) -> u8 {
         let tc0 = atsamd20e15a::TC0.borrow(cs);
         tc0.intflag.write(|w| w.ovf().set_bit().err().set_bit());
 
-        let newstate = snowflake::leds().get_over_bitmask(time);
+        /* Retrieve PWM values for current time */
+        let newstate = snowflake::pwmcache()[time];
 
         /* Enable LEDs */
         port.outclr.modify(

@@ -2,7 +2,40 @@ use core::ops::{Index, IndexMut};
 use core::slice;
 
 
-#[derive(Copy, Clone)]
+pub struct PWMCache {
+    bitmask: [u32; 256],
+}
+
+
+impl PWMCache {
+    pub const fn new() -> PWMCache {
+        PWMCache { bitmask: [0; 256] }
+    }
+
+    pub fn calculate(&mut self, leds: &LEDs)
+    {
+        for i in 0..256 {
+         self.bitmask[i] = leds.get_over_bitmask(i as u8);
+        }
+    }
+}
+
+
+pub fn pwmcache() -> &'static mut PWMCache {
+    static mut SINGLETON: PWMCache = PWMCache::new();
+    unsafe { &mut SINGLETON }
+}
+
+
+impl Index<u8> for PWMCache {
+    type Output = u32;
+
+    fn index(&self, i: u8) -> &Self::Output {
+        &self.bitmask[i as usize]
+    }
+}
+
+
 pub struct LED {
     pwm_state: u8,
     pos: u32,

@@ -12,10 +12,24 @@ impl PWMCache {
         PWMCache { bitmask: [0; 256] }
     }
 
-    pub fn calculate(&mut self, leds: &LEDs)
-    {
-        for i in 0..256 {
-         self.bitmask[i] = leds.get_over_bitmask(i as u8);
+    pub fn calculate(&mut self, leds: &LEDs) {
+        let mut pop: [bool; 256] = [false; 256];
+
+        leds.into_iter().for_each(
+            |l| pop[l.pwm_state as usize] = true,
+        );
+
+        let mut bitmask = 0;
+        for i in 1..256 {
+            if pop[i] {
+                bitmask = leds.into_iter().fold(0, |a, l| if (i as u8) < l.pwm_state {
+                    a | l.pos
+                } else {
+                    a
+                });
+            }
+
+            self.bitmask[i as usize] = bitmask;
         }
     }
 }

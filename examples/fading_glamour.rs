@@ -57,11 +57,8 @@ fn main() {
         syst.enable_interrupt();
     });
 
-    /* Setup timer interrupt with 480kHz frequency */
-    setup_tc0(2599);
-
-    /* Initialise an LED to full brightness to get started */
-    snowflake::leds()[0].set(255);
+    /* Setup timer interrupt with 185kHz frequency */
+    setup_tc0(259);
 }
 
 
@@ -71,10 +68,16 @@ exception!(SYS_TICK, running);
 
 /* Circle LEDs and let them fade out */
 fn running() {
-    snowflake::leds().subs(1);
+    let leds = &mut snowflake::leds();
+
+    /* Fade out */
+    leds.subs(1);
 
     /* Rotate LED values, skipping a few positions */
-    snowflake::leds().lshift(4);
+    leds.lshift(5);
+
+    /* Recalculate PWM values */
+    snowflake::pwmcache().calculate(leds);
 }
 
 
@@ -87,28 +90,37 @@ fn glow() {
     cortex_m::interrupt::free(|cs| {
         let eic = atsamd20e15a::EIC.borrow(cs);
         eic.intflag.modify(|_, w| w.extint13().set_bit());
-        snowflake::leds()[0].set(255);
     });
+
+    let leds = &mut snowflake::leds();
+
+    leds[0].set(255);
+
+    /* Recalculate PWM values */
+    snowflake::pwmcache().calculate(leds);
 }
 
 
 /* Define an interrupt handler, i.e. function to call when the specific interrupt occurs. Here our
  * timer to handle the PWM trips the fade function */
-interrupt!(TC0, fade, locals: {
+interrupt!(TC0, fade_handler, locals: {
     time: u8 = 0;
 });
 
 
+/* Place function into RAM to avoid flash wait states */
+#[link_section = ".data"]
+#[inline(never)]
 /* Apply the current LED intensity of all LEDs */
-fn fade(l: &mut TC0::Locals) {
+fn fade(time: u8) -> u8 {
     /* Enter critical section */
     cortex_m::interrupt::free(|cs| {
         let port = PORT.borrow(cs);
         let tc0 = atsamd20e15a::TC0.borrow(cs);
         tc0.intflag.write(|w| w.ovf().set_bit().err().set_bit());
 
-        l.time -= 1;
-        let newstate = snowflake::leds().get_over_bitmask(l.time);
+        /* Retrieve PWM values for current time */
+        let newstate = snowflake::pwmcache()[time];
 
         /* Enable LEDs */
         port.outclr.modify(
@@ -120,4 +132,13 @@ fn fade(l: &mut TC0::Locals) {
             |_, w| unsafe { w.outset().bits(!newstate) },
         );
     });
+
+    time - 1
+}
+
+
+/* The interrupt handler to call our main fade function residing in RAM */
+fn fade_handler(l: &mut TC0::Locals) {
+    /* Call into handler placed in RAM to avoid flash wait states */
+    l.time = fade(l.time);
 }

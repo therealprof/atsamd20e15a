@@ -20,7 +20,7 @@ impl PWMCache {
         );
 
         let mut bitmask = 0;
-        for i in 1..256 {
+        for i in 0..256 {
             if pop[i] {
                 bitmask = leds.into_iter().fold(0, |a, l| if (i as u8) < l.pwm_state {
                     a | l.pos

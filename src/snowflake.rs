@@ -1,5 +1,6 @@
 use core::ops::{Index, IndexMut};
 use core::slice;
+use core::ops::Deref;
 
 
 pub struct PWMCache {
@@ -70,6 +71,17 @@ impl LED {
 
     pub fn get(&self) -> u8 {
         self.pwm_state
+    }
+}
+
+
+impl Deref for LED
+{
+    type Target = u8;
+
+    fn deref(&self) -> &Self::Target
+    {
+        &self.pwm_state
     }
 }
 
@@ -159,7 +171,7 @@ impl LEDs {
     /* Saturated substraction of constant from all LED PWM values */
     pub fn subs(&mut self, other: u8) {
         for i in &mut self.leds {
-            i.pwm_state = if i16::from(i.pwm_state) - i16::from(other) < 0 {
+            i.pwm_state = if (i32::from(i.pwm_state) - i32::from(other)) < 0 {
                 0
             } else {
                 i.pwm_state - other

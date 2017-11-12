@@ -42,13 +42,13 @@ impl PWMCache {
 
     /* Pretty much the same as calculate() but scales the PWM values according to the perception of
      * the brightness to the human eye which usually yields a slightly more pleasing effect but
-     * requires slightly more memory and also runs slightly slower at around 222µs@48Mhz if all 19
+     * requires slightly more memory and also runs slightly slower at around 252µs@48Mhz if all 19
      * LEDs are actively used */
     pub fn calculate_perceived(&mut self, leds: &LEDs) {
         let mut pop = [false; 256];
 
         leds.into_iter().for_each(
-            |l| pop[l.pwm_state as usize] = true,
+            |l| pop[PWMPERC[l.pwm_state as usize] as usize] = true,
         );
 
         let mut bitmask = 0;

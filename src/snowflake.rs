@@ -263,6 +263,29 @@ impl LEDs {
 }
 
 
+pub const PWMSINE: [u8; 19] = [
+    0,
+    42,
+    83,
+    121,
+    157,
+    188,
+    213,
+    234,
+    247,
+    254,
+    254,
+    247,
+    234,
+    213,
+    188,
+    157,
+    121,
+    83,
+    42,
+];
+
+
 /* An array mapping physical PWM values (255 == fully on, 0 = off, inbetween determines percentage
  * of duty cycle) to perceived PWM values */
 pub const PWMPERC: [u8; 256] = [

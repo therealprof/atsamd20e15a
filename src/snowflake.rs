@@ -90,6 +90,13 @@ pub struct LEDs {
 }
 
 
+impl LEDs {
+    pub fn set(&mut self, pwm: u8) {
+        for l in &mut self.leds { l.set (pwm) };
+    }
+}
+
+
 pub fn leds() -> &'static mut LEDs {
     static mut SINGLETON: LEDs = LEDs::new();
     unsafe { &mut SINGLETON }

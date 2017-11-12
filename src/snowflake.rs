@@ -14,14 +14,15 @@ impl PWMCache {
     }
 
     pub fn calculate(&mut self, leds: &LEDs) {
-        let mut pop: [bool; 256] = [false; 256];
+        let mut pop = [false; 256];
 
         leds.into_iter().for_each(
             |l| pop[l.pwm_state as usize] = true,
         );
 
         let mut bitmask = 0;
-        for i in 0..256 {
+        pop[0] = true;
+        for i in 0..255 {
             if pop[i] {
                 bitmask = leds.into_iter().fold(0, |a, l| if (i as u8) < l.pwm_state {
                     a | l.pos
@@ -75,12 +76,10 @@ impl LED {
 }
 
 
-impl Deref for LED
-{
+impl Deref for LED {
     type Target = u8;
 
-    fn deref(&self) -> &Self::Target
-    {
+    fn deref(&self) -> &Self::Target {
         &self.pwm_state
     }
 }

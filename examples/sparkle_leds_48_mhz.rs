@@ -37,8 +37,8 @@ fn main() {
         /* Set source for SysTick counter, here full operating frequency (== 8MHz) */
         syst.set_clock_source(SystClkSource::Core);
 
-        /* Set reload value, i.e. timer delay (== 100ms) */
-        syst.set_reload(480_000);
+        /* Set reload value, i.e. timer delay (== 1/12s) */
+        syst.set_reload(4_000_000);
 
         /* Start counter */
         syst.enable_counter();
@@ -61,42 +61,54 @@ exception!(SYS_TICK, sparkle, locals: {
 
 
 fn sparkle(l: &mut SYS_TICK::Locals) {
+    let leds = &mut snowflake::leds();
+
     /* Enter critical section */
-    cortex_m::interrupt::free(|_cs| {
-        l.time -= 1;
+    l.time -= 1;
 
-        snowflake::leds().subs(1);
-
-        if l.time % 32 == 0 {
-            /* Use PRBS20 to generate next LED sequence */
-            let a = l.rand;
-            let newbit = ((a >> 19) ^ (a >> 2)) & 1;
-            l.rand = ((a << 1) | newbit) & 1_048_575;
-            for (i, item) in snowflake::leds().into_iter().enumerate() {
-                if (l.rand & (1 << i)) != 0 {
-                    let mut value: u16 = u16::from(item.get()) + 48;
-                    snowflake::leds()[i].set(if value > 255 { 255 } else { value as u8 });
-                }
+    /* Use PRBS20 to generate next LED sequence */
+    let a = l.rand;
+    let newbit = ((a >> 19) ^ (a >> 2)) & 1;
+    let newrand = ((a << 1) | newbit) & 1_048_575;
+    for (i, item) in snowflake::leds().into_iter().enumerate() {
+        if l.time & 2 == 2 {
+            l.rand = newrand;
+        }
+        if (l.rand & (1 << i)) != 0 && l.time & 4 == 4 {
+            let mut value: u16 = u16::from(item.get()) + 15;
+            leds[i].set(if value > 255 { 255 } else { value as u8 });
+        } else {
+            let value = leds[i].get();
+            if value > 9 {
+                leds[i].set(value - 8);
             }
         }
-    });
+    }
+
+    snowflake::pwmcache().calculate_perceived(leds);
 }
 
 
-interrupt!(TC0, fade, locals: {
+/* Define an interrupt handler, i.e. function to call when the specific interrupt occurs. Here our
+ * timer to handle the PWM trips the fade function */
+interrupt!(TC0, fade_handler, locals: {
     time: u8 = 0;
 });
 
 
-fn fade(l: &mut TC0::Locals) {
+/* Place function into RAM to avoid flash wait states */
+#[link_section = ".data"]
+#[inline(never)]
+/* Apply the current LED intensity of all LEDs */
+fn fade(time: u8) -> u8 {
     /* Enter critical section */
     cortex_m::interrupt::free(|cs| {
         let port = PORT.borrow(cs);
         let tc0 = atsamd20e15a::TC0.borrow(cs);
         tc0.intflag.write(|w| w.ovf().set_bit().err().set_bit());
 
-        l.time -= 1;
-        let newstate = snowflake::leds().get_over_bitmask(l.time);
+        /* Retrieve PWM values for current time */
+        let newstate = snowflake::pwmcache()[time];
 
         /* Enable LEDs */
         port.outclr.modify(
@@ -108,4 +120,13 @@ fn fade(l: &mut TC0::Locals) {
             |_, w| unsafe { w.outset().bits(!newstate) },
         );
     });
+
+    time - 1
+}
+
+
+/* The interrupt handler to call our main fade function residing in RAM */
+fn fade_handler(l: &mut TC0::Locals) {
+    /* Call into handler placed in RAM to avoid flash wait states */
+    l.time = fade(l.time);
 }

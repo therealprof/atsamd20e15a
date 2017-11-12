@@ -1,6 +1,7 @@
+use core::mem;
+use core::ops::Deref;
 use core::ops::{Index, IndexMut};
 use core::slice;
-use core::ops::Deref;
 
 /* Note: constants are defined all the way at the bottom due to the space needy rust standard
  * formatting */
@@ -42,17 +43,20 @@ impl PWMCache {
 
     /* Pretty much the same as calculate() but scales the PWM values according to the perception of
      * the brightness to the human eye which usually yields a slightly more pleasing effect but
-     * requires slightly more memory and also runs slightly slower at around 252µs@48Mhz if all 19
+     * requires slightly more memory and also runs slightly slower at around 248µs@48Mhz if all 19
      * LEDs are actively used */
     pub fn calculate_perceived(&mut self, leds: &LEDs) {
-        let mut pop = [false; 256];
+        let mut pop : [bool; 256] = [false; 256];
+        let mut _leds : [u8; 19] = unsafe {mem::uninitialized ()};
 
-        leds.into_iter().for_each(
-            |l| pop[PWMPERC[l.pwm_state as usize] as usize] = true,
-        );
+        for i in 0..19 {
+            let pwmvalue = PWMPERC[leds[i].pwm_state as usize];
+            _leds[i] = pwmvalue;
+            pop[pwmvalue as usize] = true;
+        }
+        pop[0] = true;
 
         let mut bitmask = 0;
-        pop[0] = true;
         for i in 0..255 {
             if pop[i] {
                 bitmask = leds.into_iter().fold(0, |a, l| if (i as u8) <

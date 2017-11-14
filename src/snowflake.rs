@@ -1,6 +1,7 @@
 use core::mem;
 use core::ops::Deref;
 use core::ops::{Index, IndexMut};
+use core::ptr;
 use core::slice;
 
 /* Note: constants are defined all the way at the bottom due to the space needy rust standard
@@ -42,33 +43,36 @@ impl PWMCache {
     }
 
     /* Pretty much the same as calculate() but scales the PWM values according to the perception of
-     * the brightness to the human eye which usually yields a slightly more pleasing effect but
-     * requires slightly more memory and also runs slightly slower at around 214µs@48Mhz if all 19
-     * LEDs are actively used */
+     * the brightness to the human eye which usually yields a slightly more pleasing effect.
+     * This runs at an average of around 156µs@48Mhz if all 19 LEDs are actively used */
     pub fn calculate_perceived(&mut self, leds: &LEDs) {
-        let mut pop = [false; 256];
-        let mut _leds : [u8; 19] = unsafe {mem::uninitialized ()};
+        let mut _leds: [u8; 19] = unsafe { mem::uninitialized() };
+        let mut _values: [u8; 20] = unsafe { mem::uninitialized() };
 
         for i in 0..19 {
             let pwmvalue = PWMPERC[leds[i].pwm_state as usize];
             _leds[i] = pwmvalue;
-            pop[pwmvalue as usize] = true;
+            _values[i + 1] = pwmvalue;
         }
-        pop[0] = true;
+        _values[0] = 0;
+        _values.sort_unstable();
 
-        let mut bitmask = 0;
-        for i in 0..255 {
-            if pop[i] {
-                bitmask = _leds.iter().enumerate().fold(0, |a, l| if (i as u8) <
-                    *l.1
-                {
-                    a | leds[l.0].pos
-                } else {
-                    a
-                });
+        for values in _values.windows(2) {
+            let (start, end) = (values[0], values[1]);
+            if start != end {
+                let bitmask = _leds.iter().enumerate().fold(
+                    0,
+                    |a, l| if (start as u8) < *l.1 {
+                        a | leds[l.0].pos
+                    } else {
+                        a
+                    },
+                );
+
+                for entry in self.bitmask[start as usize..end as usize].iter_mut() {
+                    unsafe { ptr::write(entry, bitmask) };
+                }
             }
-
-            self.bitmask[i as usize] = bitmask;
         }
     }
 }

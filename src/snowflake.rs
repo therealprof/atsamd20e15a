@@ -18,27 +18,36 @@ impl PWMCache {
     }
 
     /* Precalculate the bitmasks using for PWMing so we don't have to do that somewhat costly
-     * operation on the fly in the interrupt handler, for the ATMSAMD20 this takes around
-     * 212µs@48Mhz if all 19 LEDs are actively used */
+     * operation on the fly in the interrupt handler.  This runs at an average of around
+     * 156µs@48Mhz if all 19 LEDs are actively used */
     pub fn calculate(&mut self, leds: &LEDs) {
-        let mut pop = [false; 256];
+        let mut _leds: [u8; 19] = unsafe { mem::uninitialized() };
+        let mut _values: [u8; 20] = unsafe { mem::uninitialized() };
 
-        leds.into_iter().for_each(
-            |l| pop[l.pwm_state as usize] = true,
-        );
+        for i in 0..19 {
+            let pwmvalue = leds[i].pwm_state;
+            _leds[i] = pwmvalue;
+            _values[i + 1] = pwmvalue;
+        }
+        _values[0] = 0;
+        _values.sort_unstable();
 
-        let mut bitmask = 0;
-        pop[0] = true;
-        for i in 0..255 {
-            if pop[i] {
-                bitmask = leds.into_iter().fold(0, |a, l| if (i as u8) < l.pwm_state {
-                    a | l.pos
-                } else {
-                    a
-                });
+        for values in _values.windows(2) {
+            let (start, end) = (values[0], values[1]);
+            if start != end {
+                let bitmask = _leds.iter().enumerate().fold(
+                    0,
+                    |a, l| if (start as u8) < *l.1 {
+                        a | leds[l.0].pos
+                    } else {
+                        a
+                    },
+                );
+
+                for entry in self.bitmask[start as usize..end as usize].iter_mut() {
+                    unsafe { ptr::write(entry, bitmask) };
+                }
             }
-
-            self.bitmask[i as usize] = bitmask;
         }
     }
 

@@ -84,6 +84,14 @@ impl PWMCache {
             }
         }
     }
+
+    pub fn get_clear_bits(&self, time: u8) -> u32 {
+        self.bitmask[time as usize]
+    }
+
+    pub fn get_set_bits(&self, time: u8) -> u32 {
+        !self.bitmask[time as usize] & !(1<<15)
+    }
 }
 
 

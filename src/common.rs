@@ -1,5 +1,87 @@
-use super::{SYSCTRL, GCLK, NVMCTRL, PM, TC0, NVIC, EIC, Interrupt};
+use super::{PORT, SYST, SYSCTRL, GCLK, NVMCTRL, PM, TC0, NVIC, EIC, Interrupt};
+
+extern crate cortex_m;
+
 use cortex_m::interrupt;
+use cortex_m::peripheral::SystClkSource;
+use core::ptr;
+
+
+pub fn delay_init()
+{
+    for _ in 0..200_000 {
+        cortex_m::asm::nop();
+    }
+}
+
+
+pub fn init_gpios()
+{
+    /* Enter critical section */
+    interrupt::free(|cs| {
+        let port = PORT.borrow(cs);
+        let syst = SYST.borrow(cs);
+
+        /* Initialise PA0-PA24 to high */
+        port.outset.write(
+            |w| unsafe { w.outset().bits(0x1FF_FFFF) },
+        );
+
+        /* Set PA0-PA24 as output */
+        port.dir.write(|w| unsafe { w.dir().bits(0x1FF_FFFF) });
+
+        /* Set PA25 to input with pull-up and external interrupt enabled */
+        port.pincfg[25].modify(|_, w| {
+            w.inen().set_bit().pullen().set_bit().pmuxen().set_bit()
+        });
+
+        /* Set SysTick exception to lowest priority */
+        unsafe { ptr::write_volatile(0xE000_ED20 as *mut u32, 0xC000_0000) }
+
+        /* Initialise SysTick counter with a defined value */
+        unsafe { syst.cvr.write(1) };
+
+        /* Set source for SysTick counter, here full operating frequency (== 8MHz) */
+        syst.set_clock_source(SystClkSource::Core);
+
+        /* Set reload value, i.e. timer delay (== 1/24s) */
+        syst.set_reload(4_000_000);
+
+        /* Start counter */
+        syst.enable_counter();
+
+        /* Start interrupt generation */
+        syst.enable_interrupt();
+    });
+}
+
+
+pub fn init_systick(reload : u32)
+{
+    /* Enter critical section */
+    interrupt::free(|cs| {
+        let syst = SYST.borrow(cs);
+
+        /* Set SysTick exception to lowest priority */
+        unsafe { ptr::write_volatile(0xE000_ED20 as *mut u32, 0xC000_0000) }
+
+        /* Initialise SysTick counter with a defined value */
+        unsafe { syst.cvr.write(1) };
+
+        /* Set source for SysTick counter, here full operating frequency (== 8MHz) */
+        syst.set_clock_source(SystClkSource::Core);
+
+        /* Set reload value, i.e. timer delay (== 1/24s) */
+        syst.set_reload(reload);
+
+        /* Start counter */
+        syst.enable_counter();
+
+        /* Start interrupt generation */
+        syst.enable_interrupt();
+    });
+}
+
 
 pub fn init_48_mhz_clock() {
     interrupt::free(|cs| {
@@ -127,9 +209,9 @@ pub fn setup_tc0(divider: u16) {
         /* And wait */
         while gclk.status.read().syncbusy().bit_is_set() {}
 
-        /* Enable EXTI IRQs, set prio 1 and clear any pending IRQs */
+        /* Enable EXTI IRQs, set prio 0 and clear any pending IRQs */
         nvic.enable(Interrupt::TC0);
-        unsafe { nvic.set_priority(Interrupt::TC0, 1) };
+        unsafe { nvic.set_priority(Interrupt::TC0, 0) };
         nvic.clear_pending(Interrupt::TC0);
 
         /* Enable clock for TC0 */

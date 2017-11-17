@@ -10,7 +10,7 @@ keywords = [
     "template",
 ]
 name = "atsamd20e15a"
-version = "0.4.6"
+version = "0.4.7"
 
 [dependencies]
 bare-metal = "0.1.1"

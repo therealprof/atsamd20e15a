@@ -19,7 +19,7 @@ impl PWMCache {
 
     /* Precalculate the bitmasks using for PWMing so we don't have to do that somewhat costly
      * operation on the fly in the interrupt handler.  This runs at an average of around
-     * 156µs@48Mhz if all 19 LEDs are actively used */
+     * 129µs@48Mhz if all 19 LEDs are actively used */
     pub fn calculate(&mut self, leds: &LEDs) {
         let mut _leds: [u8; 19] = unsafe { mem::uninitialized() };
         let mut _values: [u8; 20] = unsafe { mem::uninitialized() };
@@ -38,7 +38,7 @@ impl PWMCache {
                 let bitmask = _leds.iter().enumerate().fold(
                     0,
                     |a, l| if (start as u8) < *l.1 {
-                        a | leds[l.0].pos
+                        a | leds.pos[l.0]
                     } else {
                         a
                     },
@@ -53,7 +53,7 @@ impl PWMCache {
 
     /* Pretty much the same as calculate() but scales the PWM values according to the perception of
      * the brightness to the human eye which usually yields a slightly more pleasing effect.
-     * This runs at an average of around 156µs@48Mhz if all 19 LEDs are actively used */
+     * This runs at an average of around 130µs@48Mhz if all 19 LEDs are actively used */
     pub fn calculate_perceived(&mut self, leds: &LEDs) {
         let mut _leds: [u8; 19] = unsafe { mem::uninitialized() };
         let mut _values: [u8; 20] = unsafe { mem::uninitialized() };
@@ -72,7 +72,7 @@ impl PWMCache {
                 let bitmask = _leds.iter().enumerate().fold(
                     0,
                     |a, l| if (start as u8) < *l.1 {
-                        a | leds[l.0].pos
+                        a | leds.pos[l.0]
                     } else {
                         a
                     },
@@ -112,15 +112,13 @@ impl Index<u8> for PWMCache {
 
 pub struct LED {
     pwm_state: u8,
-    pos: u32,
 }
 
 
 impl LED {
-    pub const fn new(pos: u32) -> LED {
+    pub const fn new() -> LED {
         LED {
             pwm_state: 0,
-            pos: pos,
         }
     }
 
@@ -145,6 +143,7 @@ impl Deref for LED {
 
 pub struct LEDs {
     leds: [LED; 19],
+    pos: [u32; 19],
 }
 
 
@@ -193,26 +192,47 @@ impl LEDs {
     pub const fn new() -> LEDs {
         LEDs {
             leds: [
-                LED::new(1 << 0),
-                LED::new(1 << 1),
-                LED::new(1 << 2),
-                LED::new(1 << 3),
-                LED::new(1 << 4),
-                LED::new(1 << 5),
-                LED::new(1 << 6),
-                LED::new(1 << 7),
-                LED::new(1 << 8),
-                LED::new(1 << 9),
-                LED::new(1 << 10),
-                LED::new(1 << 11),
-                LED::new(1 << 24),
-                LED::new(1 << 23),
-                LED::new(1 << 22),
-                LED::new(1 << 19),
-                LED::new(1 << 18),
-                LED::new(1 << 17),
-                LED::new(1 << 16),
+                LED::new(),
+                LED::new(),
+                LED::new(),
+                LED::new(),
+                LED::new(),
+                LED::new(),
+                LED::new(),
+                LED::new(),
+                LED::new(),
+                LED::new(),
+                LED::new(),
+                LED::new(),
+                LED::new(),
+                LED::new(),
+                LED::new(),
+                LED::new(),
+                LED::new(),
+                LED::new(),
+                LED::new(),
             ],
+            pos: [
+                1 << 0,
+                1 << 1,
+                1 << 2,
+                1 << 3,
+                1 << 4,
+                1 << 5,
+                1 << 6,
+                1 << 7,
+                1 << 8,
+                1 << 9,
+                1 << 10,
+                1 << 11,
+                1 << 24,
+                1 << 23,
+                1 << 22,
+                1 << 19,
+                1 << 18,
+                1 << 17,
+                1 << 16,
+                ],
         }
     }
 
@@ -272,14 +292,6 @@ impl LEDs {
             }
             self[18].pwm_state = temp;
         }
-    }
-
-    pub fn get_over_bitmask(&self, value: u8) -> u32 {
-        self.into_iter().fold(0, |a, l| if value < l.pwm_state {
-            a | l.pos
-        } else {
-            a
-        })
     }
 }
 

@@ -30,7 +30,7 @@ fn main() {
     setup_tc0(200);
 
     /* Initialise an LED gradient using the values of a sine wave */
-    let leds = snowflake::leds();
+    let leds = snowflake::proto_leds();
     for i in 1..19 {
         leds[i].set(snowflake::PWMSINE[i]);
     }
@@ -49,7 +49,7 @@ exception!(SYS_TICK, running);
 
 
 fn running() {
-    let leds = &mut snowflake::leds();
+    let leds = &mut snowflake::proto_leds();
 
     /* Rotate LED values */
     leds.lshift(1);

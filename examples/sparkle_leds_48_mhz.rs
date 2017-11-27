@@ -61,7 +61,7 @@ exception!(SYS_TICK, sparkle, locals: {
 
 
 fn sparkle(l: &mut SYS_TICK::Locals) {
-    let leds = &mut snowflake::leds();
+    let leds = &mut snowflake::proto_leds();
 
     /* Enter critical section */
     l.time -= 1;
@@ -70,7 +70,7 @@ fn sparkle(l: &mut SYS_TICK::Locals) {
     let a = l.rand;
     let newbit = ((a >> 19) ^ (a >> 2)) & 1;
     let newrand = ((a << 1) | newbit) & 1_048_575;
-    for (i, item) in snowflake::leds().into_iter().enumerate() {
+    for (i, item) in snowflake::proto_leds().into_iter().enumerate() {
         if l.time & 2 == 2 {
             l.rand = newrand;
         }

@@ -51,7 +51,7 @@ fn main() {
     setup_tc0(100);
 
     /* Initialise a few LEDs with a gradient */
-    let leds = snowflake::leds();
+    let leds = snowflake::snowflake_leds();
     leds[0].set(255);
     leds[1].set(127);
     leds[2].set(15);
@@ -70,7 +70,7 @@ exception!(SYS_TICK, running, locals: {
 fn running(l: &mut SYS_TICK::Locals) {
     l.time -= 1;
 
-    let leds = &mut snowflake::leds();
+    let leds = &mut snowflake::snowflake_leds();
 
     /* Rotate LED values in one direction for a few rounds, then the other */
     if l.time < 127 {

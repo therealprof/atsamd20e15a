@@ -170,8 +170,14 @@ impl LEDs {
 }
 
 
-pub fn leds() -> &'static mut LEDs {
-    static mut SINGLETON: LEDs = LEDs::new();
+pub fn proto_leds() -> &'static mut LEDs {
+    static mut SINGLETON: LEDs = LEDs::new(PROTO_LED_MAPPING);
+    unsafe { &mut SINGLETON }
+}
+
+
+pub fn snowflake_leds() -> &'static mut LEDs {
+    static mut SINGLETON: LEDs = LEDs::new(SNOWFLAKE_LED_MAPPING);
     unsafe { &mut SINGLETON }
 }
 
@@ -203,7 +209,7 @@ impl IndexMut<usize> for LEDs {
 
 
 impl LEDs {
-    pub const fn new() -> LEDs {
+    pub const fn new(mapping: [u32; 19]) -> LEDs {
         LEDs {
             leds: [
                 LED::new(),
@@ -226,27 +232,7 @@ impl LEDs {
                 LED::new(),
                 LED::new(),
             ],
-            pos: [
-                1 << 0,
-                1 << 1,
-                1 << 2,
-                1 << 3,
-                1 << 4,
-                1 << 5,
-                1 << 6,
-                1 << 7,
-                1 << 8,
-                1 << 9,
-                1 << 10,
-                1 << 11,
-                1 << 24,
-                1 << 23,
-                1 << 22,
-                1 << 19,
-                1 << 18,
-                1 << 17,
-                1 << 16,
-            ],
+            pos: mapping,
         }
     }
 
@@ -311,6 +297,52 @@ impl LEDs {
 
 
 pub const DATAOUT: u32 = 1 << 15;
+
+/* LED to pin mapping for the protoboard */
+const PROTO_LED_MAPPING: [u32; 19] = [
+    1 << 0,
+    1 << 1,
+    1 << 2,
+    1 << 3,
+    1 << 4,
+    1 << 5,
+    1 << 6,
+    1 << 7,
+    1 << 8,
+    1 << 9,
+    1 << 10,
+    1 << 11,
+    1 << 24,
+    1 << 23,
+    1 << 22,
+    1 << 19,
+    1 << 18,
+    1 << 17,
+    1 << 16,
+];
+
+/* LED to pin mapping for real snowflake */
+const SNOWFLAKE_LED_MAPPING: [u32; 19] = [
+    1 << 0,
+    1 << 3,
+    1 << 6,
+    1 << 9,
+    1 << 16,
+    1 << 19,
+    1 << 1,
+    1 << 4,
+    1 << 7,
+    1 << 10,
+    1 << 17,
+    1 << 22,
+    1 << 2,
+    1 << 5,
+    1 << 8,
+    1 << 11,
+    1 << 18,
+    1 << 23,
+    1 << 24,
+];
 
 
 pub const PWMSINE: [u8; 19] = [

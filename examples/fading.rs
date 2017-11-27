@@ -58,7 +58,7 @@ fn main() {
     setup_tc0(200);
 
     /* Initialise an LED gradient */
-    let leds = snowflake::leds();
+    let leds = snowflake::proto_leds();
     leds[0].set(255);
     leds[1].set(230);
     leds[2].set(210);
@@ -82,7 +82,7 @@ exception!(SYS_TICK, running);
 
 
 fn running() {
-    let leds = &mut snowflake::leds();
+    let leds = &mut snowflake::proto_leds();
 
     /* Rotate LED values */
     leds.rshift(1);

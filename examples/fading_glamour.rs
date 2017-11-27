@@ -68,7 +68,7 @@ exception!(SYS_TICK, running);
 
 /* Circle LEDs and let them fade out */
 fn running() {
-    let leds = &mut snowflake::leds();
+    let leds = &mut snowflake::proto_leds();
 
     /* Fade out */
     leds.subs(1);
@@ -92,7 +92,7 @@ fn glow() {
         eic.intflag.modify(|_, w| w.extint13().set_bit());
     });
 
-    let leds = &mut snowflake::leds();
+    let leds = &mut snowflake::proto_leds();
 
     leds[0].set(255);
 

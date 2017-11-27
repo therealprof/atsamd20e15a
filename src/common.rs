@@ -254,6 +254,7 @@ pub fn setup_tc0(divider: u16) {
 
 
 /* Setup EIC and PA25 to register external interrupts */
+
 pub fn setup_eic() {
     interrupt::free(|cs| {
         let eic = EIC.borrow(cs);
@@ -307,5 +308,27 @@ pub fn setup_eic() {
         nvic.enable(Interrupt::EIC);
         unsafe { nvic.set_priority(Interrupt::EIC, 2) };
         nvic.clear_pending(Interrupt::EIC);
+    });
+}
+
+
+pub fn pull_pins_high (bits: u32)
+{
+    cortex_m::interrupt::free(|cs| {
+        let port = PORT.borrow(cs);
+        port.outset.modify(
+            |_, w| unsafe { w.outset().bits(bits) },
+            );
+    });
+}
+
+
+pub fn pull_pins_low (bits: u32)
+{
+    cortex_m::interrupt::free(|cs| {
+        let port = PORT.borrow(cs);
+        port.outclr.modify(
+            |_, w| unsafe { w.outclr().bits(bits) },
+        );
     });
 }

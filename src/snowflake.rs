@@ -55,16 +55,32 @@ impl PWMCache {
      * the brightness to the human eye which usually yields a slightly more pleasing effect.
      * This runs at an average of around 130µs@48Mhz if all 19 LEDs are actively used */
     pub fn calculate_perceived(&mut self, leds: &LEDs) {
-        let mut _leds: [u8; 19] = unsafe { mem::uninitialized() };
-        let mut _values: [u8; 20] = unsafe { mem::uninitialized() };
+        let _leds = unsafe {
+            let mut _pwm: [u8; 19] = mem::uninitialized();
 
-        for i in 0..19 {
-            let pwmvalue = PWMPERC[leds[i].pwm_state as usize];
-            _leds[i] = pwmvalue;
-            _values[i + 1] = pwmvalue;
-        }
-        _values[0] = 0;
+            for (i, v) in _pwm.iter_mut().enumerate() {
+                ptr::write(v, PWMPERC[*leds[i] as usize]);
+            }
+
+            _pwm
+        };
+
+        let mut _values: [u8; 19] = _leds;
         _values.sort_unstable();
+
+        if _values[0] != 0 {
+            let bitmask = _leds.iter().enumerate().fold(0, |a, l| if 0 < *l.1 {
+                a | leds.pos[l.0]
+            } else {
+                a
+            });
+
+            for start in 0.._values[0] {
+                for entry in self.bitmask[start as usize.._values[0] as usize].iter_mut() {
+                    unsafe { ptr::write(entry, bitmask) };
+                }
+            }
+        }
 
         for values in _values.windows(2) {
             let (start, end) = (values[0], values[1]);
@@ -90,7 +106,7 @@ impl PWMCache {
     }
 
     pub fn get_set_bits(&self, time: u8) -> u32 {
-        !self.bitmask[time as usize] & !(1<<15)
+        !self.bitmask[time as usize] & !(1 << 15)
     }
 }
 
@@ -117,9 +133,7 @@ pub struct LED {
 
 impl LED {
     pub const fn new() -> LED {
-        LED {
-            pwm_state: 0,
-        }
+        LED { pwm_state: 0 }
     }
 
     pub fn set(&mut self, pwm: u8) {
@@ -232,7 +246,7 @@ impl LEDs {
                 1 << 18,
                 1 << 17,
                 1 << 16,
-                ],
+            ],
         }
     }
 
@@ -294,6 +308,9 @@ impl LEDs {
         }
     }
 }
+
+
+pub const DATAOUT: u32 = 1 << 15;
 
 
 pub const PWMSINE: [u8; 19] = [

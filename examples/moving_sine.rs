@@ -24,13 +24,13 @@ fn main() {
     init_gpios();
 
     /* Initialise the SysTick timer and exception */
-    init_systick(4_000_000);
+    init_systick(3_000_000);
 
-    /* Setup timer interrupt with 240kHz frequency */
-    setup_tc0(200);
+    /* Setup timer interrupt with 480kHz frequency */
+    setup_tc0(100);
 
     /* Initialise an LED gradient using the values of a sine wave */
-    let leds = snowflake::proto_leds();
+    let leds = snowflake::snowflake_leds();
     for i in 1..19 {
         leds[i].set(snowflake::PWMSINE[i]);
     }
@@ -49,7 +49,7 @@ exception!(SYS_TICK, running);
 
 
 fn running() {
-    let leds = &mut snowflake::proto_leds();
+    let leds = &mut snowflake::snowflake_leds();
 
     /* Rotate LED values */
     leds.lshift(1);

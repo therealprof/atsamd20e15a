@@ -80,7 +80,7 @@ fn running(l: &mut SYS_TICK::Locals) {
     }
 
     /* Recalculate PWM values */
-    snowflake::pwmcache().calculate(leds);
+    snowflake::pwmcache().calculate_perceived(leds);
 }
 
 

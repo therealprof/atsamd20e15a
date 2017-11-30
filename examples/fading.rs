@@ -88,7 +88,7 @@ fn running() {
     leds.rshift(1);
 
     /* Recalculate PWM values */
-    snowflake::pwmcache().calculate(leds);
+    snowflake::pwmcache().calculate_perceived(leds);
 }
 
 

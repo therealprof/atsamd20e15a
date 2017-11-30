@@ -70,22 +70,18 @@ fn sparkle(l: &mut SYS_TICK::Locals) {
     let a = l.rand;
     let newbit = ((a >> 19) ^ (a >> 2)) & 1;
     let newrand = ((a << 1) | newbit) & 1_048_575;
-    for (i, item) in snowflake::proto_leds().into_iter().enumerate() {
+    for (i, _item) in snowflake::proto_leds().into_iter().enumerate() {
         if l.time & 2 == 2 {
             l.rand = newrand;
         }
         if (l.rand & (1 << i)) != 0 && l.time & 4 == 4 {
-            let mut value: u16 = u16::from(item.get()) + 15;
-            leds[i].set(if value > 255 { 255 } else { value as u8 });
+            leds[i].add(15);
         } else {
-            let value = leds[i].get();
-            if value > 9 {
-                leds[i].set(value - 8);
-            }
+            leds[i].sub(8);
         }
     }
 
-    snowflake::pwmcache().calculate_perceived(leds);
+    snowflake::pwmcache().calculate(leds);
 }
 
 

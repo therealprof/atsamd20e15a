@@ -158,6 +158,14 @@ impl LED {
         self.pwm_state = pwm;
     }
 
+    pub fn add(&mut self, value: u8) {
+        self.pwm_state = self.pwm_state.saturating_add(value);
+    }
+
+    pub fn sub(&mut self, value: u8) {
+        self.pwm_state = self.pwm_state.saturating_sub(value);
+    }
+
     pub fn get(&self) -> u8 {
         self.pwm_state
     }

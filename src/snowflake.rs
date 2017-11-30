@@ -22,7 +22,7 @@ impl PWMCache {
      * 129µs@48Mhz if all 19 LEDs are actively used */
     pub fn calculate(&mut self, leds: &LEDs) {
         let mut _leds: [u8; 19] = unsafe { mem::uninitialized() };
-        let mut _values: [u8; 20] = unsafe { mem::uninitialized() };
+        let mut _values: [u8; 21] = unsafe { mem::uninitialized() };
 
         for i in 0..19 {
             let pwmvalue = leds[i].pwm_state;
@@ -30,6 +30,7 @@ impl PWMCache {
             _values[i + 1] = pwmvalue;
         }
         _values[0] = 0;
+        _values[20] = 255;
         _values.sort_unstable();
 
         for values in _values.windows(2) {
@@ -77,6 +78,23 @@ impl PWMCache {
 
             for start in 0.._values[0] {
                 for entry in self.bitmask[start as usize.._values[0] as usize].iter_mut() {
+                    unsafe { ptr::write(entry, bitmask) };
+                }
+            }
+        }
+
+        if _values[18] != 255 {
+            let bitmask = _leds.iter().enumerate().fold(
+                0,
+                |a, l| if _values[18] < *l.1 {
+                    a | leds.pos[l.0]
+                } else {
+                    a
+                },
+            );
+
+            for start in _values[18]..255 {
+                for entry in self.bitmask[start as usize..255 as usize].iter_mut() {
                     unsafe { ptr::write(entry, bitmask) };
                 }
             }

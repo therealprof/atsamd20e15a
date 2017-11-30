@@ -264,37 +264,29 @@ impl LEDs {
 
     /* Saturated addition of constant to all LED PWM values */
     pub fn adds(&mut self, other: u8) {
-        for i in &mut self.leds {
-            i.pwm_state = if u16::from(i.pwm_state) + u16::from(other) > 255 {
-                255
-            } else {
-                i.pwm_state + other
-            };
+        for l in &mut self.leds {
+            l.add(other);
         }
     }
 
     /* Overflowing addition of constant to all LED PWM values */
     pub fn add(&mut self, other: u8) {
-        for i in &mut self.leds {
-            i.pwm_state += other
+        for l in &mut self.leds {
+            l.pwm_state += other
         }
     }
 
     /* Saturated substraction of constant from all LED PWM values */
     pub fn subs(&mut self, other: u8) {
-        for i in &mut self.leds {
-            i.pwm_state = if (i32::from(i.pwm_state) - i32::from(other)) < 0 {
-                0
-            } else {
-                i.pwm_state - other
-            };
+        for l in &mut self.leds {
+            l.sub(other);
         }
     }
 
     /* Underflowing substraction of constant from all LED PWM values */
     pub fn sub(&mut self, other: u8) {
-        for i in &mut self.leds {
-            i.pwm_state -= other
+        for l in &mut self.leds {
+            l.pwm_state -= other
         }
     }
 

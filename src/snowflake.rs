@@ -208,6 +208,14 @@ pub fn snowflake_leds() -> &'static mut LEDs {
 }
 
 
+pub enum SNOWFLAKE_RING {
+    INNER,
+    ONE,
+    TWO,
+    OUTER,
+}
+
+
 impl<'a> IntoIterator for &'a LEDs {
     type Item = &'a LED;
     type IntoIter = slice::Iter<'a, LED>;
@@ -261,6 +269,23 @@ impl LEDs {
             pos: mapping,
         }
     }
+
+    pub fn get_ring(&mut self, which: &SNOWFLAKE_RING) -> &mut [LED] {
+        match *which {
+            SNOWFLAKE_RING::INNER => &mut self.leds[18..19],
+            SNOWFLAKE_RING::ONE => &mut self.leds[12..18],
+            SNOWFLAKE_RING::TWO => &mut self.leds[6..12],
+            SNOWFLAKE_RING::OUTER => &mut self.leds[0..6],
+        }
+    }
+
+
+    pub fn set_ring(&mut self, which: &SNOWFLAKE_RING, value: u8) {
+        for l in self.get_ring(which) {
+            l.pwm_state = value;
+        }
+    }
+
 
     /* Saturated addition of constant to all LED PWM values */
     pub fn adds(&mut self, other: u8) {

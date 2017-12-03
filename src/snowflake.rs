@@ -1,6 +1,5 @@
 use core::mem;
-use core::ops::Deref;
-use core::ops::{Index, IndexMut};
+use core::ops::{Deref, DerefMut, Index, IndexMut};
 use core::ptr;
 use core::slice;
 
@@ -181,6 +180,13 @@ impl Deref for LED {
 }
 
 
+impl DerefMut for LED {
+    fn deref_mut(&mut self) -> &mut u8 {
+        &mut self.pwm_state
+    }
+}
+
+
 pub struct LEDs {
     leds: [LED; 19],
     pos: [u32; 19],
@@ -270,7 +276,17 @@ impl LEDs {
         }
     }
 
-    pub fn get_ring(&mut self, which: &SNOWFLAKE_RING) -> &mut [LED] {
+    pub fn get_ring(&mut self, which: &SNOWFLAKE_RING) -> &[LED] {
+        match *which {
+            SNOWFLAKE_RING::INNER => &self.leds[18..19],
+            SNOWFLAKE_RING::ONE => &self.leds[12..18],
+            SNOWFLAKE_RING::TWO => &self.leds[6..12],
+            SNOWFLAKE_RING::OUTER => &self.leds[0..6],
+        }
+    }
+
+
+    pub fn get_ring_mut(&mut self, which: &SNOWFLAKE_RING) -> &mut [LED] {
         match *which {
             SNOWFLAKE_RING::INNER => &mut self.leds[18..19],
             SNOWFLAKE_RING::ONE => &mut self.leds[12..18],
@@ -281,8 +297,41 @@ impl LEDs {
 
 
     pub fn set_ring(&mut self, which: &SNOWFLAKE_RING, value: u8) {
-        for l in self.get_ring(which) {
+        for l in self.get_ring_mut(which) {
             l.pwm_state = value;
+        }
+    }
+
+
+    pub fn shift_outwards(&mut self) {
+        let inner: u8 = self.get_ring(&SNOWFLAKE_RING::INNER)
+            .iter()
+            .nth(0)
+            .unwrap()
+            .get();
+        let mut state: [u8; 6] = [inner; 6];
+
+        self.set_ring(&SNOWFLAKE_RING::INNER, 0);
+
+        for (l, s) in self.get_ring_mut(&SNOWFLAKE_RING::ONE).iter_mut().zip(
+            state.iter_mut(),
+        )
+        {
+            mem::swap(&mut **l, s);
+        }
+
+        for (l, s) in self.get_ring_mut(&SNOWFLAKE_RING::TWO).iter_mut().zip(
+            state.iter_mut(),
+        )
+        {
+            mem::swap(&mut **l, s);
+        }
+
+        for (l, s) in self.get_ring_mut(&SNOWFLAKE_RING::OUTER).iter_mut().zip(
+            state.iter_mut(),
+        )
+        {
+            mem::swap(&mut **l, s);
         }
     }
 
@@ -343,7 +392,7 @@ pub const DATAOUT: u32 = 1 << 15;
 
 /* LED to pin mapping for the protoboard */
 const PROTO_LED_MAPPING: [u32; 19] = [
-    1 << 0,
+    1,
     1 << 1,
     1 << 2,
     1 << 3,
@@ -366,7 +415,7 @@ const PROTO_LED_MAPPING: [u32; 19] = [
 
 /* LED to pin mapping for real snowflake */
 const SNOWFLAKE_LED_MAPPING: [u32; 19] = [
-    1 << 0,
+    1,
     1 << 3,
     1 << 6,
     1 << 9,

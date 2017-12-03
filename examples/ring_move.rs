@@ -24,7 +24,7 @@ fn main() {
     init_gpios();
 
     /* Initialise the SysTick timer and exception */
-    init_systick(8_000_000);
+    init_systick(6_000_000);
 
     /* Setup timer interrupt with 480kHz frequency */
     setup_tc0(100);
@@ -52,10 +52,18 @@ fn running(l: &mut SYS_TICK::Locals) {
         pull_pins_high(snowflake::DATAOUT);
     }
 
-    snowflake::snowflake_leds().shift_outwards();
+    if l.time < 128 {
+        snowflake::snowflake_leds().shift_outwards();
 
-    if l.time & 4 == 4 {
-        leds.set_ring(&snowflake::SNOWFLAKE_RING::INNER, 128);
+        if l.time & 4 == 4 {
+            leds.set_ring(&snowflake::SNOWFLAKE_RING::INNER, 128);
+        }
+    } else {
+        snowflake::snowflake_leds().shift_inwards();
+
+        if l.time & 4 == 4 {
+            leds.set_ring(&snowflake::SNOWFLAKE_RING::OUTER, 128);
+        }
     }
 
     /* Recalculate PWM values */

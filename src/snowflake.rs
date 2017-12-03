@@ -336,6 +336,34 @@ impl LEDs {
     }
 
 
+    pub fn shift_inwards(&mut self) {
+        let mut state: [u8; 6] = [0; 6];
+
+        for (l, s) in self.get_ring_mut(&SNOWFLAKE_RING::OUTER).iter_mut().zip(
+            state.iter_mut(),
+        )
+        {
+            mem::swap(&mut **l, s);
+        }
+
+        for (l, s) in self.get_ring_mut(&SNOWFLAKE_RING::TWO).iter_mut().zip(
+            state.iter_mut(),
+        )
+        {
+            mem::swap(&mut **l, s);
+        }
+
+        for (l, s) in self.get_ring_mut(&SNOWFLAKE_RING::ONE).iter_mut().zip(
+            state.iter_mut(),
+        )
+        {
+            mem::swap(&mut **l, s);
+        }
+
+        self.set_ring(&SNOWFLAKE_RING::INNER, *state.iter().max().unwrap_or(&0));
+    }
+
+
     /* Saturated addition of constant to all LED PWM values */
     pub fn adds(&mut self, other: u8) {
         for l in &mut self.leds {

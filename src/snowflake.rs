@@ -1,7 +1,11 @@
+extern crate arrayvec;
+
 use core::mem;
 use core::ops::{Deref, DerefMut, Index, IndexMut};
 use core::ptr;
 use core::slice;
+
+use self::arrayvec::ArrayVec;
 
 /* Note: constants are defined all the way at the bottom due to the space needy rust standard
  * formatting */
@@ -20,33 +24,50 @@ impl PWMCache {
      * operation on the fly in the interrupt handler.  This runs at an average of around
      * 129µs@48Mhz if all 19 LEDs are actively used */
     pub fn calculate(&mut self, leds: &LEDs) {
-        let mut _leds: [u8; 19] = unsafe { mem::uninitialized() };
-        let mut _values: [u8; 21] = unsafe { mem::uninitialized() };
+        let mut _leds = ArrayVec::<[u8; 19]>::new();
+        let mut _values = ArrayVec::<[u8; 21]>::new();
 
-        for i in 0..19 {
-            let pwmvalue = leds[i].pwm_state;
-            _leds[i] = pwmvalue;
-            _values[i + 1] = pwmvalue;
+        unsafe {
+            _values.push_unchecked(0);
         }
-        _values[0] = 0;
-        _values[20] = 255;
-        _values.sort_unstable();
+
+        for l in leds.into_iter() {
+            let pwmvalue = l.pwm_state;
+            unsafe {
+                _leds.push_unchecked(pwmvalue);
+            }
+
+            match _values.iter().position(|v| v >= &pwmvalue) {
+                Some(pos) => {
+                    if _values[pos] != pwmvalue {
+                        _values.insert(pos, pwmvalue);
+                    }
+                }
+                None => unsafe {
+                    _values.push_unchecked(pwmvalue);
+                },
+            }
+        }
+
+        if _values.last() != Some(&255) {
+            unsafe {
+                _values.push_unchecked(255);
+            }
+        }
 
         for values in _values.windows(2) {
             let (start, end) = (values[0], values[1]);
-            if start != end {
-                let bitmask = _leds.iter().enumerate().fold(
-                    0,
-                    |a, l| if (start as u8) < *l.1 {
-                        a | leds.pos[l.0]
-                    } else {
-                        a
-                    },
-                );
+            let bitmask = _leds.iter().enumerate().fold(
+                0,
+                |a, l| if (start as u8) < *l.1 {
+                    a | leds.pos[l.0]
+                } else {
+                    a
+                },
+            );
 
-                for entry in self.bitmask[start as usize..end as usize].iter_mut() {
-                    unsafe { ptr::write(entry, bitmask) };
-                }
+            for entry in self.bitmask[start as usize..end as usize].iter_mut() {
+                unsafe { ptr::write(entry, bitmask) };
             }
         }
     }

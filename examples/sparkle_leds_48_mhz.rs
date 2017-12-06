@@ -5,47 +5,26 @@
 extern crate atsamd20e15a;
 extern crate cortex_m;
 
-use atsamd20e15a::{PORT, SYST, init_48_mhz_clock, setup_tc0};
-use cortex_m::interrupt;
-use cortex_m::peripheral::SystClkSource;
+use atsamd20e15a::{init_48_mhz_clock, setup_tc0, delay_init, init_gpios, init_systick, snowflake,
+                   pull_pins_low, pull_pins_high};
 
-use atsamd20e15a::snowflake;
+/* If set to true, enables a high edge on data out pin during PWM value calculation for measurement
+ * via oscilloscope */
+const DEBUG: bool = false;
 
 
 fn main() {
-    for _ in 0..200_000 {
-        cortex_m::asm::nop();
-    }
+    /* ATSAMD is bitchy, let's delay a bit so we can attach with a debugger if we need to */
+    delay_init();
 
     /* Initialise clock, has its own critical section */
     init_48_mhz_clock();
 
-    /* Enter critical section */
-    interrupt::free(|cs| {
-        let port = PORT.borrow(cs);
-        let syst = SYST.borrow(cs);
+    /* Initialise the used GPIOs */
+    init_gpios();
 
-        /* Initialise PA0-PA24 */
-        port.outset.modify(
-            |_, w| unsafe { w.outset().bits(0x1FF_FFFF) },
-        );
-        port.dir.modify(|_, w| unsafe { w.dir().bits(0x1FF_FFFF) });
-
-        /* Initialise SysTick counter with a defined value */
-        unsafe { syst.cvr.write(1) };
-
-        /* Set source for SysTick counter, here full operating frequency (== 8MHz) */
-        syst.set_clock_source(SystClkSource::Core);
-
-        /* Set reload value, i.e. timer delay (== 1/12s) */
-        syst.set_reload(4_000_000);
-
-        /* Start counter */
-        syst.enable_counter();
-
-        /* Start interrupt generation */
-        syst.enable_interrupt();
-    });
+    /* Initialise the SysTick timer and exception */
+    init_systick(4_000_000);
 
     /* Set timer to fire every 480kHz */
     setup_tc0(100);
@@ -62,6 +41,10 @@ exception!(SYS_TICK, sparkle, locals: {
 
 fn sparkle(l: &mut SYS_TICK::Locals) {
     let leds = &mut snowflake::proto_leds();
+
+    if DEBUG {
+        pull_pins_high(snowflake::DATAOUT);
+    }
 
     /* Enter critical section */
     l.time -= 1;
@@ -82,6 +65,10 @@ fn sparkle(l: &mut SYS_TICK::Locals) {
     }
 
     snowflake::pwmcache().calculate(leds);
+
+    if DEBUG {
+        pull_pins_low(snowflake::DATAOUT);
+    }
 }
 
 
@@ -99,23 +86,15 @@ interrupt!(TC0, fade_handler, locals: {
 fn fade(time: u8) -> u8 {
     /* Enter critical section */
     cortex_m::interrupt::free(|cs| {
-        let port = PORT.borrow(cs);
         let tc0 = atsamd20e15a::TC0.borrow(cs);
         tc0.intflag.write(|w| w.ovf().set_bit().err().set_bit());
-
-        /* Retrieve PWM values for current time */
-        let newstate = snowflake::pwmcache()[time];
-
-        /* Enable LEDs */
-        port.outclr.modify(
-            |_, w| unsafe { w.outclr().bits(newstate) },
-        );
-
-        /* Disable LEDs */
-        port.outset.modify(
-            |_, w| unsafe { w.outset().bits(!newstate) },
-        );
     });
+
+    /* Enable LEDs */
+    pull_pins_low(snowflake::pwmcache().get_clear_bits(time));
+
+    /* Disable LEDs */
+    pull_pins_high(snowflake::pwmcache().get_set_bits(time));
 
     time - 1
 }

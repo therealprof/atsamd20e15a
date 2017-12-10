@@ -28,6 +28,9 @@ fn main() {
 
     /* Set timer to fire every 480kHz */
     setup_tc0(100);
+
+    let leds = snowflake::snowflake_leds();
+    leds.set(255);
 }
 
 
@@ -40,31 +43,30 @@ exception!(SYS_TICK, sparkle, locals: {
 
 
 fn sparkle(l: &mut SYS_TICK::Locals) {
-    let leds = &mut snowflake::proto_leds();
+    let leds = &mut snowflake::snowflake_leds();
 
     if DEBUG {
         pull_pins_high(snowflake::DATAOUT);
     }
 
-    /* Enter critical section */
     l.time -= 1;
 
     /* Use PRBS20 to generate next LED sequence */
     let a = l.rand;
     let newbit = ((a >> 19) ^ (a >> 2)) & 1;
     let newrand = ((a << 1) | newbit) & 1_048_575;
-    for (i, _item) in snowflake::proto_leds().into_iter().enumerate() {
+    for (i, _item) in snowflake::snowflake_leds().into_iter().enumerate() {
         if l.time & 2 == 2 {
             l.rand = newrand;
         }
-        if (l.rand & (1 << i)) != 0 && l.time & 4 == 4 {
+        if (l.rand & (1 << i)) != 0 {
             leds[i].add(15);
-        } else {
-            leds[i].sub(8);
         }
     }
+    leds.subs(18);
+    leds.add(10);
 
-    snowflake::pwmcache().calculate(leds);
+    snowflake::pwmcache().calculate_perceived(leds);
 
     if DEBUG {
         pull_pins_low(snowflake::DATAOUT);

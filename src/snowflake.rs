@@ -235,6 +235,32 @@ pub fn snowflake_leds() -> &'static mut LEDs {
 }
 
 
+pub fn get_neighbours(which: usize) -> &'static [usize] {
+    match which {
+        0 => &[6],
+        1 => &[7],
+        2 => &[8],
+        3 => &[9],
+        4 => &[10],
+        5 => &[11],
+        6 => &[0, 12, 17],
+        7 => &[1, 12, 13],
+        8 => &[2, 13, 14],
+        9 => &[3, 14, 15],
+        10 => &[4, 15, 16],
+        11 => &[5, 16, 17],
+        12 => &[6, 7, 13, 18, 17],
+        13 => &[7, 8, 14, 18, 12],
+        14 => &[8, 9, 15, 18, 13],
+        15 => &[9, 10, 16, 18, 14],
+        16 => &[10, 11, 17, 18, 15],
+        17 => &[11, 6, 12, 18, 16],
+        18 => &[12, 13, 14, 15, 16, 17],
+        _ => &[],
+    }
+}
+
+
 pub enum SNOWFLAKE_RING {
     INNER,
     ONE,
@@ -296,6 +322,7 @@ impl LEDs {
             pos: mapping,
         }
     }
+
 
     pub fn get_ring(&mut self, which: &SNOWFLAKE_RING) -> &[LED] {
         match *which {

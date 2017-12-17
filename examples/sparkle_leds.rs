@@ -55,7 +55,7 @@ fn sparkle(l: &mut SYS_TICK::Locals) {
     let a = l.rand;
     let newbit = ((a >> 19) ^ (a >> 2)) & 1;
     let newrand = ((a << 1) | newbit) & 1_048_575;
-    for (i, _item) in snowflake::snowflake_leds().into_iter().enumerate() {
+    for (i, _) in snowflake::snowflake_leds().into_iter().enumerate() {
         if l.time & 2 == 2 {
             l.rand = newrand;
         }
@@ -65,6 +65,11 @@ fn sparkle(l: &mut SYS_TICK::Locals) {
     }
     leds.subs(18);
     leds.add(10);
+    for (i, _) in snowflake::snowflake_leds().into_iter().enumerate() {
+        if leds[i].get() < 12 {
+            leds[i].set(12);
+        }
+    }
 
     snowflake::pwmcache().calculate_perceived(leds);
 

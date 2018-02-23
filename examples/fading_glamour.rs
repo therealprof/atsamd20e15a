@@ -77,7 +77,7 @@ fn running() {
     leds.lshift(5);
 
     /* Recalculate PWM values */
-    snowflake::pwmcache().calculate(leds);
+    snowflake::pwmcache().calculate_perceived(leds);
 }
 
 
@@ -97,7 +97,7 @@ fn glow() {
     leds[0].set(255);
 
     /* Recalculate PWM values */
-    snowflake::pwmcache().calculate(leds);
+    snowflake::pwmcache().calculate_perceived(leds);
 }
 
 

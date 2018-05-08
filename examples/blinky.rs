@@ -1,8 +1,8 @@
 #![feature(used)]
 #![no_std]
 
-extern crate cortex_m;
 extern crate atsamd20e15a;
+extern crate cortex_m;
 
 use atsamd20e15a::{PORT, SYSCTRL};
 use cortex_m::interrupt;

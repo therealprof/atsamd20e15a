@@ -1,39 +1,32 @@
-use super::{PORT, SYST, SYSCTRL, GCLK, NVMCTRL, PM, TC0, NVIC, EIC, Interrupt};
+use super::{Interrupt, TC0, EIC, GCLK, NVIC, NVMCTRL, PM, PORT, SYSCTRL, SYST};
 
 extern crate cortex_m;
 
+use core::ptr;
 use cortex_m::interrupt;
 use cortex_m::peripheral::SystClkSource;
-use core::ptr;
 
-
-pub fn delay_init()
-{
+pub fn delay_init() {
     for _ in 0..200_000 {
         cortex_m::asm::nop();
     }
 }
 
-
-pub fn init_gpios()
-{
+pub fn init_gpios() {
     /* Enter critical section */
     interrupt::free(|cs| {
         let port = PORT.borrow(cs);
         let syst = SYST.borrow(cs);
 
         /* Initialise PA0-PA24 to high */
-        port.outset.write(
-            |w| unsafe { w.outset().bits(0x1FF_FFFF) },
-        );
+        port.outset
+            .write(|w| unsafe { w.outset().bits(0x1FF_FFFF) });
 
         /* Set PA0-PA24 as output */
         port.dir.write(|w| unsafe { w.dir().bits(0x1FF_FFFF) });
 
         /* Set PA25 to input with pull-up and external interrupt enabled */
-        port.pincfg[25].modify(|_, w| {
-            w.inen().set_bit().pullen().set_bit().pmuxen().set_bit()
-        });
+        port.pincfg[25].modify(|_, w| w.inen().set_bit().pullen().set_bit().pmuxen().set_bit());
 
         /* Set SysTick exception to lowest priority */
         unsafe { ptr::write_volatile(0xE000_ED20 as *mut u32, 0xC000_0000) }
@@ -55,9 +48,7 @@ pub fn init_gpios()
     });
 }
 
-
-pub fn init_systick(reload : u32)
-{
+pub fn init_systick(reload: u32) {
     /* Enter critical section */
     interrupt::free(|cs| {
         let syst = SYST.borrow(cs);
@@ -82,7 +73,6 @@ pub fn init_systick(reload : u32)
     });
 }
 
-
 pub fn init_48_mhz_clock() {
     interrupt::free(|cs| {
         let sysctrl = SYSCTRL.borrow(cs);
@@ -102,22 +92,19 @@ pub fn init_48_mhz_clock() {
         sysctrl.osc8m.modify(|_, w| w.ondemand().clear_bit());
 
         /* Set up divisor on clock generator 3 */
-        gclk.gendiv.write(
-            |w| unsafe { w.div().bits(64).id().bits(3) },
-        );
+        gclk.gendiv
+            .write(|w| unsafe { w.div().bits(64).id().bits(3) });
 
         /* Set up 8 MHz clock as source for clock generator 3 */
-        gclk.genctrl.write(|w| unsafe {
-            w.id().bits(3).genen().set_bit().src().osc8m()
-        });
+        gclk.genctrl
+            .write(|w| unsafe { w.id().bits(3).genen().set_bit().src().osc8m() });
 
         /* Wait, again... */
         while gclk.status.read().syncbusy().bit_is_set() {}
 
         /* Set up clock generator 3 as input for DFLL */
-        gclk.clkctrl.write(|w| unsafe {
-            w.clken().set_bit().gen().bits(3).id().dfll48m()
-        });
+        gclk.clkctrl
+            .write(|w| unsafe { w.clken().set_bit().gen().bits(3).id().dfll48m() });
 
         /* Wait, again... */
         while gclk.status.read().syncbusy().bit_is_set() {}
@@ -129,17 +116,17 @@ pub fn init_48_mhz_clock() {
         while sysctrl.pclksr.read().dfllrdy().bit_is_clear() {}
 
         /* Set multiplicator for DFLL */
-        sysctrl.dfllmul.write(|w| unsafe {
-            w.cstep().bits(1).fstep().bits(1).mul().bits(3072)
-        });
+        sysctrl
+            .dfllmul
+            .write(|w| unsafe { w.cstep().bits(1).fstep().bits(1).mul().bits(3072) });
 
         /* Wait, again... */
         while sysctrl.pclksr.read().dfllrdy().bit_is_clear() {}
 
         /* Disable quick lock and enable open-loop mode */
-        sysctrl.dfllctrl.modify(
-            |_, w| w.mode().set_bit().qldis().set_bit(),
-        );
+        sysctrl
+            .dfllctrl
+            .modify(|_, w| w.mode().set_bit().qldis().set_bit());
 
         /* Wait, again... */
         while sysctrl.pclksr.read().dfllrdy().bit_is_clear() {}
@@ -161,17 +148,16 @@ pub fn init_48_mhz_clock() {
         while sysctrl.pclksr.read().dfllrdy().bit_is_clear() {}
 
         /* Wait for the DFLL to lock  */
-        while sysctrl.intflag.read().dflllckc().bit_is_clear() &&
-            sysctrl.intflag.read().dflllckf().bit_is_clear()
+        while sysctrl.intflag.read().dflllckc().bit_is_clear()
+            && sysctrl.intflag.read().dflllckf().bit_is_clear()
         {}
 
         /* Wait, again... */
         while sysctrl.intflag.read().dfllrdy().bit_is_clear() {}
 
         /* Set up clock generator 0 (== CPU clock) without divisor */
-        gclk.gendiv.write(
-            |w| unsafe { w.div().bits(0).id().bits(0) },
-        );
+        gclk.gendiv
+            .write(|w| unsafe { w.div().bits(0).id().bits(0) });
 
         /* Wait, again... */
         while gclk.status.read().syncbusy().bit_is_set() {}
@@ -193,7 +179,6 @@ pub fn init_48_mhz_clock() {
     });
 }
 
-
 pub fn setup_tc0(divider: u16) {
     interrupt::free(|cs| {
         let gclk = GCLK.borrow(cs);
@@ -202,9 +187,8 @@ pub fn setup_tc0(divider: u16) {
         let nvic = NVIC.borrow(cs);
 
         /* Setup CPU clock for TC0 and TC1 */
-        gclk.clkctrl.write(|w| {
-            w.clken().set_bit().gen().gclk0().id().tc0_tc1()
-        });
+        gclk.clkctrl
+            .write(|w| w.clken().set_bit().gen().gclk0().id().tc0_tc1());
 
         /* And wait */
         while gclk.status.read().syncbusy().bit_is_set() {}
@@ -217,17 +201,15 @@ pub fn setup_tc0(divider: u16) {
         /* Enable clock for TC0 */
         pm.apbcmask.modify(|_, w| w.tc0().set_bit());
 
-        tc0.ctrla.modify(|_, w| {
-            w.mode().count16().prescaler().div8().wavegen().mfrq()
-        });
+        tc0.ctrla
+            .modify(|_, w| w.mode().count16().prescaler().div8().wavegen().mfrq());
 
         /* And wait */
         while tc0.status.read().syncbusy().bit_is_set() {}
 
         /* Make timer autorestart */
-        tc0.ctrlbset.write(
-            |w| w.oneshot().clear_bit().cmd().retrigger(),
-        );
+        tc0.ctrlbset
+            .write(|w| w.oneshot().clear_bit().cmd().retrigger());
 
         /* And wait */
         while tc0.status.read().syncbusy().bit_is_set() {}
@@ -252,7 +234,6 @@ pub fn setup_tc0(divider: u16) {
     });
 }
 
-
 /* Setup EIC and PA25 to register external interrupts */
 
 pub fn setup_eic() {
@@ -266,9 +247,8 @@ pub fn setup_eic() {
         pm.apbamask.modify(|_, w| w.eic().set_bit());
 
         /* Set up clock generator 0 as input for EIC */
-        gclk.clkctrl.write(
-            |w| w.clken().set_bit().gen().gclk0().id().eic(),
-        );
+        gclk.clkctrl
+            .write(|w| w.clken().set_bit().gen().gclk0().id().eic());
 
         /* How about we wait? */
         while gclk.status.read().syncbusy().bit_is_set() {}
@@ -311,24 +291,16 @@ pub fn setup_eic() {
     });
 }
 
-
-pub fn pull_pins_high (bits: u32)
-{
+pub fn pull_pins_high(bits: u32) {
     cortex_m::interrupt::free(|cs| {
         let port = PORT.borrow(cs);
-        port.outset.modify(
-            |_, w| unsafe { w.outset().bits(bits) },
-            );
+        port.outset.modify(|_, w| unsafe { w.outset().bits(bits) });
     });
 }
 
-
-pub fn pull_pins_low (bits: u32)
-{
+pub fn pull_pins_low(bits: u32) {
     cortex_m::interrupt::free(|cs| {
         let port = PORT.borrow(cs);
-        port.outclr.modify(
-            |_, w| unsafe { w.outclr().bits(bits) },
-        );
+        port.outclr.modify(|_, w| unsafe { w.outclr().bits(bits) });
     });
 }

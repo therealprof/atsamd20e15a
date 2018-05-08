@@ -414,7 +414,7 @@ const SNOWFLAKE_LED_MAPPING: [u32; 19] = [
 ];
 
 pub const PWMSINE: [u8; 19] = [
-    0, 42, 83, 121, 157, 188, 213, 234, 247, 254, 254, 247, 234, 213, 188, 157, 121, 83, 42
+    0, 42, 83, 121, 157, 188, 213, 234, 247, 254, 254, 247, 234, 213, 188, 157, 121, 83, 42,
 ];
 
 /* An array mapping physical PWM values (255 == fully on, 0 = off, inbetween determines percentage

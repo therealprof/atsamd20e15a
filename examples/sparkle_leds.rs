@@ -5,13 +5,14 @@
 extern crate atsamd20e15a;
 extern crate cortex_m;
 
-use atsamd20e15a::{init_48_mhz_clock, setup_tc0, delay_init, init_gpios, init_systick, snowflake,
-                   pull_pins_low, pull_pins_high};
+use atsamd20e15a::{
+    delay_init, init_48_mhz_clock, init_gpios, init_systick, pull_pins_high, pull_pins_low,
+    setup_tc0, snowflake,
+};
 
 /* If set to true, enables a high edge on data out pin during PWM value calculation for measurement
  * via oscilloscope */
 const DEBUG: bool = false;
-
 
 fn main() {
     /* ATSAMD is bitchy, let's delay a bit so we can attach with a debugger if we need to */
@@ -33,14 +34,12 @@ fn main() {
     leds.set(255);
 }
 
-
 /* Define an exception, i.e. function to call when exception occurs. Here our SysTick timer
  * trips the sparkle function */
 exception!(SYS_TICK, sparkle, locals: {
     rand: u32 = 2;
     time: u8 = 0;
 });
-
 
 fn sparkle(l: &mut SYS_TICK::Locals) {
     let leds = &mut snowflake::snowflake_leds();
@@ -78,13 +77,11 @@ fn sparkle(l: &mut SYS_TICK::Locals) {
     }
 }
 
-
 /* Define an interrupt handler, i.e. function to call when the specific interrupt occurs. Here our
  * timer to handle the PWM trips the fade function */
 interrupt!(TC0, fade_handler, locals: {
     time: u8 = 0;
 });
-
 
 /* Place function into RAM to avoid flash wait states */
 #[link_section = ".data"]
@@ -105,7 +102,6 @@ fn fade(time: u8) -> u8 {
 
     time - 1
 }
-
 
 /* The interrupt handler to call our main fade function residing in RAM */
 fn fade_handler(l: &mut TC0::Locals) {

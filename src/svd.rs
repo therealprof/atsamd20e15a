@@ -1,5 +1,5 @@
-use core::ops::Deref;
 use bare_metal::Peripheral;
+use core::ops::Deref;
 #[doc = r" Number available in the NVIC for configuring priority"]
 pub const NVIC_PRIO_BITS: u8 = 2;
 pub use interrupt::Interrupt;
@@ -227,7 +227,9 @@ pub mod ac {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -1351,7 +1353,9 @@ pub mod ac {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -1717,7 +1721,9 @@ pub mod ac {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -2081,7 +2087,9 @@ pub mod ac {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -2327,7 +2335,9 @@ pub mod ac {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -2573,7 +2583,9 @@ pub mod ac {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -2819,7 +2831,9 @@ pub mod ac {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -2913,7 +2927,9 @@ pub mod ac {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -3059,7 +3075,9 @@ pub mod ac {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -3177,7 +3195,9 @@ pub mod ac {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -3339,7 +3359,9 @@ pub mod ac {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -3669,7 +3691,9 @@ pub mod adc {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -4035,7 +4059,9 @@ pub mod adc {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -4186,7 +4212,9 @@ pub mod adc {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -4432,7 +4460,9 @@ pub mod adc {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -5077,7 +5107,9 @@ pub mod adc {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -5205,7 +5237,9 @@ pub mod adc {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -5510,7 +5544,9 @@ pub mod adc {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -5620,7 +5656,9 @@ pub mod adc {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -6675,7 +6713,9 @@ pub mod adc {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -6980,7 +7020,9 @@ pub mod adc {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -7285,7 +7327,9 @@ pub mod adc {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -7590,7 +7634,9 @@ pub mod adc {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -7700,7 +7746,9 @@ pub mod adc {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -7966,7 +8014,9 @@ pub mod adc {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -8028,7 +8078,9 @@ pub mod adc {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -8122,7 +8174,9 @@ pub mod adc {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -8194,7 +8248,9 @@ pub mod adc {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -8381,7 +8437,9 @@ pub mod adc {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -8604,7 +8662,9 @@ pub mod adc {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -8714,7 +8774,9 @@ pub mod adc {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -8864,7 +8926,9 @@ pub mod dac {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -9110,7 +9174,9 @@ pub mod dac {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -9535,7 +9601,9 @@ pub mod dac {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -9645,7 +9713,9 @@ pub mod dac {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -9755,7 +9825,9 @@ pub mod dac {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -9942,7 +10014,9 @@ pub mod dac {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -10188,7 +10262,9 @@ pub mod dac {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -10434,7 +10510,9 @@ pub mod dac {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -10664,7 +10742,9 @@ pub mod dac {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -10808,7 +10888,9 @@ pub mod dsu {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -10943,7 +11025,9 @@ pub mod dsu {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -10989,7 +11073,9 @@ pub mod dsu {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -11056,7 +11142,9 @@ pub mod dsu {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -11102,7 +11190,9 @@ pub mod dsu {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -11368,7 +11458,9 @@ pub mod dsu {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -11478,7 +11570,9 @@ pub mod dsu {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -11588,7 +11682,9 @@ pub mod dsu {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -11682,7 +11778,9 @@ pub mod dsu {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -11938,7 +12036,9 @@ pub mod dsu {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -11984,7 +12084,9 @@ pub mod dsu {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -12108,7 +12210,9 @@ pub mod dsu {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -12202,7 +12306,9 @@ pub mod dsu {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -12258,7 +12364,9 @@ pub mod dsu {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -12304,7 +12412,9 @@ pub mod dsu {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -12371,7 +12481,9 @@ pub mod dsu {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -12469,7 +12581,9 @@ pub mod dsu {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -12536,7 +12650,9 @@ pub mod dsu {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -12603,7 +12719,9 @@ pub mod dsu {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         impl R {
@@ -12628,7 +12746,9 @@ pub mod dsu {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         impl R {
@@ -12653,7 +12773,9 @@ pub mod dsu {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         impl R {
@@ -12694,7 +12816,9 @@ pub mod dsu {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -13042,7 +13166,9 @@ pub mod dsu {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -13278,7 +13404,9 @@ pub mod eic {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -15187,7 +15315,9 @@ pub mod eic {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -15374,7 +15504,9 @@ pub mod eic {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -16387,7 +16519,9 @@ pub mod eic {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -17400,7 +17534,9 @@ pub mod eic {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -18413,7 +18549,9 @@ pub mod eic {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -19426,7 +19564,9 @@ pub mod eic {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -19725,7 +19865,9 @@ pub mod eic {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -19837,7 +19979,9 @@ pub mod eic {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -19909,7 +20053,9 @@ pub mod eic {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -20958,7 +21104,9 @@ pub mod evsys {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -21408,7 +21556,9 @@ pub mod evsys {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -22037,7 +22187,9 @@ pub mod evsys {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -23050,7 +23202,9 @@ pub mod evsys {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -24063,7 +24217,9 @@ pub mod evsys {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -25076,7 +25232,9 @@ pub mod evsys {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -25257,7 +25415,9 @@ pub mod gclk {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -26194,7 +26354,9 @@ pub mod gclk {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -26322,7 +26484,9 @@ pub mod gclk {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -27155,7 +27319,9 @@ pub mod gclk {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -27454,7 +27620,9 @@ pub mod gclk {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -27569,7 +27737,9 @@ pub mod nvmctrl {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -27679,7 +27849,9 @@ pub mod nvmctrl {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -28124,7 +28296,9 @@ pub mod nvmctrl {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -28671,7 +28845,9 @@ pub mod nvmctrl {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -28858,7 +29034,9 @@ pub mod nvmctrl {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -29045,7 +29223,9 @@ pub mod nvmctrl {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -29216,7 +29396,9 @@ pub mod nvmctrl {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -29262,7 +29444,9 @@ pub mod nvmctrl {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -29425,7 +29609,9 @@ pub mod nvmctrl {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -29816,7 +30002,9 @@ pub mod pac0 {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -29926,7 +30114,9 @@ pub mod pac0 {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -30112,7 +30302,9 @@ pub mod pm {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -30476,7 +30668,9 @@ pub mod pm {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -30958,7 +31152,9 @@ pub mod pm {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -31231,7 +31427,9 @@ pub mod pm {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -31536,7 +31734,9 @@ pub mod pm {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -31809,7 +32009,9 @@ pub mod pm {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -32822,7 +33024,9 @@ pub mod pm {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -33095,7 +33299,9 @@ pub mod pm {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -33368,7 +33574,9 @@ pub mod pm {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -33437,7 +33645,9 @@ pub mod pm {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -33565,7 +33775,9 @@ pub mod pm {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -33693,7 +33905,9 @@ pub mod pm {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -33805,7 +34019,9 @@ pub mod pm {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -34032,7 +34248,9 @@ pub mod pm {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -34324,7 +34542,9 @@ pub mod port {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -34434,7 +34654,9 @@ pub mod port {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -34544,7 +34766,9 @@ pub mod port {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -34654,7 +34878,9 @@ pub mod port {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -34748,7 +34974,9 @@ pub mod port {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -34810,7 +35038,9 @@ pub mod port {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -34920,7 +35150,9 @@ pub mod port {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -35030,7 +35262,9 @@ pub mod port {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -35140,7 +35374,9 @@ pub mod port {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -35250,7 +35486,9 @@ pub mod port {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -35524,7 +35762,9 @@ pub mod port {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -36316,7 +36556,9 @@ pub mod sercom0 {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -36426,7 +36668,9 @@ pub mod sercom0 {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -37437,7 +37681,9 @@ pub mod sercom0 {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -37842,7 +38088,9 @@ pub mod sercom0 {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -37952,7 +38200,9 @@ pub mod sercom0 {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -38080,7 +38330,9 @@ pub mod sercom0 {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -38385,7 +38637,9 @@ pub mod sercom0 {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -38690,7 +38944,9 @@ pub mod sercom0 {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -38908,7 +39164,9 @@ pub mod sercom0 {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -39280,7 +39538,9 @@ pub mod sysctrl {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -39767,7 +40027,9 @@ pub mod sysctrl {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -40308,7 +40570,9 @@ pub mod sysctrl {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -40564,7 +40828,9 @@ pub mod sysctrl {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -40736,7 +41002,9 @@ pub mod sysctrl {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -41513,7 +41781,9 @@ pub mod sysctrl {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -42290,7 +42560,9 @@ pub mod sysctrl {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -43067,7 +43339,9 @@ pub mod sysctrl {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -43572,7 +43846,9 @@ pub mod sysctrl {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -43941,7 +44217,9 @@ pub mod sysctrl {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -44094,7 +44372,9 @@ pub mod sysctrl {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -44507,7 +44787,9 @@ pub mod sysctrl {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -44735,7 +45017,9 @@ pub mod sysctrl {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -44922,7 +45206,9 @@ pub mod sysctrl {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -45368,7 +45654,9 @@ pub mod sysctrl {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -45999,7 +46287,9 @@ pub mod tc0 {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -46109,7 +46399,9 @@ pub mod tc0 {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -46219,7 +46511,9 @@ pub mod tc0 {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -47014,7 +47308,9 @@ pub mod tc0 {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -47321,7 +47617,9 @@ pub mod tc0 {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -47628,7 +47926,9 @@ pub mod tc0 {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -47933,7 +48233,9 @@ pub mod tc0 {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -48061,7 +48363,9 @@ pub mod tc0 {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -48596,7 +48900,9 @@ pub mod tc0 {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -48960,7 +49266,9 @@ pub mod tc0 {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -49324,7 +49632,9 @@ pub mod tc0 {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -49688,7 +49998,9 @@ pub mod tc0 {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -49900,7 +50212,9 @@ pub mod tc0 {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]
@@ -50212,7 +50526,9 @@ pub mod wdt {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -50827,7 +51143,9 @@ pub mod wdt {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -51073,7 +51391,9 @@ pub mod wdt {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -51415,7 +51735,9 @@ pub mod wdt {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -51543,7 +51865,9 @@ pub mod wdt {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -51671,7 +51995,9 @@ pub mod wdt {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
             #[doc = r" Writes to the register"]
             #[inline]
@@ -51783,7 +52109,9 @@ pub mod wdt {
             #[doc = r" Reads the contents of the register"]
             #[inline]
             pub fn read(&self) -> R {
-                R { bits: self.register.get() }
+                R {
+                    bits: self.register.get(),
+                }
             }
         }
         #[doc = r" Value of the field"]

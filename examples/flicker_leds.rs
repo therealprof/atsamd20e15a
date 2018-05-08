@@ -36,10 +36,8 @@ fn main() {
 
         /* Start interrupt generation */
         syst.enable_interrupt();
-
     });
 }
-
 
 /* Define an exception, i.e. function to call when exception occurs. Here if our SysTick timer
  * trips the flicker function */
@@ -47,7 +45,6 @@ exception!(SYS_TICK, flicker, locals: {
     state: bool = false;
     rand: u32 = 2;
 });
-
 
 fn flicker(l: &mut SYS_TICK::Locals) {
     /* Enter critical section */
@@ -57,17 +54,15 @@ fn flicker(l: &mut SYS_TICK::Locals) {
         /* If next state is true */
         if l.state {
             /* Enable LEDs */
-            port.outclr.modify(
-                |_, w| unsafe { w.outclr().bits(l.rand) },
-            );
+            port.outclr
+                .modify(|_, w| unsafe { w.outclr().bits(l.rand) });
 
             /* And set next state to false */
             l.state = false;
         } else {
             /* Disable LEDs */
-            port.outset.modify(
-                |_, w| unsafe { w.outset().bits(l.rand) },
-            );
+            port.outset
+                .modify(|_, w| unsafe { w.outset().bits(l.rand) });
 
             /* And set next state to false */
             l.state = true;

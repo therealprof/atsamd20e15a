@@ -5,12 +5,11 @@
 extern crate atsamd20e15a;
 extern crate cortex_m;
 
-use atsamd20e15a::{PORT, SYST, init_48_mhz_clock, setup_tc0, setup_eic};
+use atsamd20e15a::{init_48_mhz_clock, setup_eic, setup_tc0, PORT, SYST};
 use cortex_m::interrupt;
 use cortex_m::peripheral::SystClkSource;
 
 use atsamd20e15a::snowflake;
-
 
 fn main() {
     for _ in 0..200_000 {
@@ -29,17 +28,14 @@ fn main() {
         let syst = SYST.borrow(cs);
 
         /* Initialise PA0-PA24 to high */
-        port.outset.write(
-            |w| unsafe { w.outset().bits(0x1FF_FFFF) },
-        );
+        port.outset
+            .write(|w| unsafe { w.outset().bits(0x1FF_FFFF) });
 
         /* Set PA0-PA24 as output */
         port.dir.write(|w| unsafe { w.dir().bits(0x1FF_FFFF) });
 
         /* Set PA25 to input with pull-up and external interrupt enabled */
-        port.pincfg[25].modify(|_, w| {
-            w.inen().set_bit().pullen().set_bit().pmuxen().set_bit()
-        });
+        port.pincfg[25].modify(|_, w| w.inen().set_bit().pullen().set_bit().pmuxen().set_bit());
 
         /* Initialise SysTick counter with a defined value */
         unsafe { syst.cvr.write(1) };
@@ -61,7 +57,6 @@ fn main() {
     setup_tc0(259);
 }
 
-
 /* Define an exception handler, i.e. function to call when the specific exception occurs. Here our SysTick timer
  * trips the running function */
 exception!(SYS_TICK, running);
@@ -79,7 +74,6 @@ fn running() {
     /* Recalculate PWM values */
     snowflake::pwmcache().calculate_perceived(leds);
 }
-
 
 /* Define an interrupt handler, i.e. function to call when the specific interrupt occurs. Here our
  * input pin PA25 is connected to the external interrupt EXTINT13 and trips the glow function */
@@ -100,13 +94,11 @@ fn glow() {
     snowflake::pwmcache().calculate_perceived(leds);
 }
 
-
 /* Define an interrupt handler, i.e. function to call when the specific interrupt occurs. Here our
  * timer to handle the PWM trips the fade function */
 interrupt!(TC0, fade_handler, locals: {
     time: u8 = 0;
 });
-
 
 /* Place function into RAM to avoid flash wait states */
 #[link_section = ".data"]
@@ -123,19 +115,16 @@ fn fade(time: u8) -> u8 {
         let newstate = snowflake::pwmcache()[time];
 
         /* Enable LEDs */
-        port.outclr.modify(
-            |_, w| unsafe { w.outclr().bits(newstate) },
-        );
+        port.outclr
+            .modify(|_, w| unsafe { w.outclr().bits(newstate) });
 
         /* Disable LEDs */
-        port.outset.modify(
-            |_, w| unsafe { w.outset().bits(!newstate) },
-        );
+        port.outset
+            .modify(|_, w| unsafe { w.outset().bits(!newstate) });
     });
 
     time - 1
 }
-
 
 /* The interrupt handler to call our main fade function residing in RAM */
 fn fade_handler(l: &mut TC0::Locals) {

@@ -5,12 +5,11 @@
 extern crate atsamd20e15a;
 extern crate cortex_m;
 
-use atsamd20e15a::{PORT, SYST, init_48_mhz_clock, setup_tc0};
+use atsamd20e15a::{init_48_mhz_clock, setup_tc0, PORT, SYST};
 use cortex_m::interrupt;
 use cortex_m::peripheral::SystClkSource;
 
 use atsamd20e15a::snowflake;
-
 
 fn main() {
     for _ in 0..200_000 {
@@ -26,9 +25,8 @@ fn main() {
         let syst = SYST.borrow(cs);
 
         /* Initialise PA0-PA24 */
-        port.outset.modify(
-            |_, w| unsafe { w.outset().bits(0x1FF_FFFF) },
-        );
+        port.outset
+            .modify(|_, w| unsafe { w.outset().bits(0x1FF_FFFF) });
         port.dir.modify(|_, w| unsafe { w.dir().bits(0x1FF_FFFF) });
 
         /* Initialise SysTick counter with a defined value */
@@ -59,13 +57,11 @@ fn main() {
     leds[4].set(1);
 }
 
-
 /* Define an exception, i.e. function to call when exception occurs. Here our SysTick timer
  * trips the running function */
 exception!(SYS_TICK, running, locals: {
     time: u8 = 0;
 });
-
 
 fn running(l: &mut SYS_TICK::Locals) {
     l.time -= 1;
@@ -83,13 +79,11 @@ fn running(l: &mut SYS_TICK::Locals) {
     snowflake::pwmcache().calculate_perceived(leds);
 }
 
-
 /* Define an interrupt handler, i.e. function to call when the specific interrupt occurs. Here our
  * timer to handle the PWM trips the fade function */
 interrupt!(TC0, fade_handler, locals: {
     time: u8 = 0;
 });
-
 
 /* Place function into RAM to avoid flash wait states */
 #[link_section = ".data"]
@@ -106,19 +100,16 @@ fn fade(time: u8) -> u8 {
         let newstate = snowflake::pwmcache()[time];
 
         /* Enable LEDs */
-        port.outclr.modify(
-            |_, w| unsafe { w.outclr().bits(newstate) },
-        );
+        port.outclr
+            .modify(|_, w| unsafe { w.outclr().bits(newstate) });
 
         /* Disable LEDs */
-        port.outset.modify(
-            |_, w| unsafe { w.outset().bits(!newstate) },
-        );
+        port.outset
+            .modify(|_, w| unsafe { w.outset().bits(!newstate) });
     });
 
     time - 1
 }
-
 
 /* The interrupt handler to call our main fade function residing in RAM */
 fn fade_handler(l: &mut TC0::Locals) {

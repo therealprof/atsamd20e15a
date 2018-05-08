@@ -10,15 +10,14 @@ Setup a Rust toolchain for Cortex-M processors:
 
 ```
 $ rustup install nightly
-$ rustup component add rust-src
 $ rustup override set nightly
-$ cargo install xargo
+$ rustup target add thumb7m-none-eabi
 ```
 
 After this you can build the examples with:
 
 ```
-$ xargo build --examples --release
+$ cargo build --examples --release
 ```
 
 and pick up the executables from

@@ -1,6 +1,8 @@
 #![feature(used)]
 #![no_std]
 
+extern crate panic_abort;
+
 extern crate atsamd20e15a;
 extern crate cortex_m;
 

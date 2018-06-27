@@ -10,7 +10,7 @@ keywords = [
     "template",
 ]
 name = "atsamd20e15a"
-version = "0.5.5"
+version = "0.5.6"
 
 [dependencies]
 bare-metal = "0.1.1"
@@ -19,9 +19,9 @@ numtoa = "0.0.7"
 static-ref = "0.2.1"
 vcell = "0.1.0"
 volatile-register = "0.2.0"
+panic-abort = "0.2.0"
 
 [dependencies.cortex-m-rt]
-features = ["abort-on-panic"]
 version = "0.3.13"
 
 [features]
